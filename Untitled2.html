@@ -1,0 +1,81 @@
+<!--2025/8/17-->
+
+
+
+<!--
+html, ... 에서 LaTeX 수식 쓰기:
+https://m.blog.naver.com/mathesis_time/222108156490
+이 글을 참조함~! ㅎㅎ
+(mathjax? , ... 를 이용하면 되는 건가 봐~! ... ㅎㅎ)
+(19:37:18)
+오오..! ㅎㅎ 흠 ㅎㅎ
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled2</title>
+
+    <link href="style_Untitled2.css" rel="stylesheet" type="text/css">
+
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <!--
+    https://m.blog.naver.com/mathesis_time/222108156490
+    이 글에서 가져옴~! ㅎㅎ (19:38:20) 오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
+</head>
+<body>
+    <h1>Untitled2</h1>
+
+    Hello World! <br>
+    안녕하세요!
+
+    <p>This is a paragraph.</p>
+
+    <box>abcde</box> <br><br> <!--왜 여기는 <br>을 2번 해 줘야 하는지는 잘 모르겠음... 흠... (19:27:25)-->
+
+    <div>abcde</div> <br> <!--(19:24:32)-->
+
+    <div class="box1">abcde</div> <br>
+
+    <div class="box1">
+        <div class="box2">
+            012345678901234567890123456789
+        </div>
+    </div>
+    <br>
+
+    <div class="box2">
+        <div class="box3">
+            1 <br>
+            121 <br>
+            12321 <br>
+            1234321 <br> <!--아하, last enter (마지막 개행) 은 적용이 안 되는구낭... ㄷㄷㄷㄷ (아마) 편리하넹... ㅎㅎ (19:30:19) 흠... ㅎㅎ-->
+        </div>
+    </div>
+    <br>
+    
+    $\Delta(z) = q \prod_{k = 1}^\infty \left( 1 - q^k \right)^{24} \\
+    \Delta(z + 1) = \Delta(z)$
+    <!--ㄷㄷㄷㄷㄷㄷ 인라인 수식인데 여러 줄이 되는 거 신기하넹... ㅋㅋㅋㅋㅋㅋ (19:41:02) 흠... ㅎㅎ-->
+    <br>
+
+    $$\Delta(z) = q \prod_{k = 1}^\infty \left( 1 - q^k \right)^{24} \\
+    \Delta(z + 1) = \Delta(z)$$
+
+    <!--(19:41:38) 오오~! ㅎㅎ 흠 ㅎㅎ-->
+    
+
+
+    <br><br><br><br><br><br>
+    <a href="index.html">Go Back</a>
+</body>
+</html>

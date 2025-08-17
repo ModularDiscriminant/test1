@@ -1,0 +1,34 @@
+/*2025/8/17*/
+
+html
+{
+    background-color: #efffff;
+}
+
+p
+{
+    color: blueviolet;
+}
+
+h1
+{
+    margin: 0;
+    padding: 20px 0;
+}
+
+.box1
+{
+    width: 100px;
+    height: 100px;
+    background-color: #ffdfdf;
+}
+
+.box2
+{
+    background-color: #ffffdf;
+}
+
+.box3
+{
+    background-color: #dfffdf;
+}
