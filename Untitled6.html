@@ -1,0 +1,94 @@
+<!--2025/10/12-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled6</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <!--"style.css" 자리에, 적절한 원하는 css 파일의 이름을 삽입할 것 (2025/8/19 25:29:43)-->
+
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <!--
+    https://m.blog.naver.com/mathesis_time/222108156490
+    이 글에서 가져옴~! ㅎㅎ (2025/8/17 19:38:20) 오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
+
+    <script src="script_Untitled6.js"></script>
+    <!--"script.js" 자리에, 적절한 원하는 js (자바스크립트) 파일의 이름을 삽입할 것 (2025/8/19 25:30:09)-->
+
+    <!--오오, 이건 그냥 연관된 함수들 (ButtonClicked1(), ButtonClicked2()) 을 정의하는 js 파일이라, js 파일이 꼭 html 문서의 맨 아래에 위치하지 않아도 잘 실행이 되는 건가~? ... ㅎㅎ (15:55:07) 오오..! ㅎㅎ 흠 ㅎㅎ-->
+</head>
+<body>
+    <h1>Untitled6</h1>
+
+    <input
+        type="text"
+        id="TextInput1"
+        name="text input 1"
+    />
+
+    <br><br>
+
+    <input
+        type="button"
+        id="Button1"
+        name="button 1"
+        value="please click me!!!"
+        onclick="ButtonClicked1()"
+    />
+    
+    <br><br>
+
+    <!--(15:17:11)-->
+
+    <button onclick="ButtonClicked2()">
+        This is a literal button.
+    </button>
+
+    <br><br>
+
+    <!--(15:23:14)-->
+
+    <input
+        type="button"
+        id="Button3"
+        name="button 3"
+        value="submit the text"
+        onclick="ButtonClicked3()"
+    />
+
+    <br><br>
+
+    <!--(2025/10/12 19:34:44)-->
+
+    <input
+        type="button"
+        id="Button4"
+        name="button 4"
+        value="remove output"
+        onclick="ButtonClicked4()"
+    />
+
+    <br><br>
+
+    <!--(19:54:16)-->
+
+    <div id="output"></div>
+
+
+
+    <br><br><br><br><br><br>
+    <a href="index.html">Go Back</a>
+</body>
+</html>
