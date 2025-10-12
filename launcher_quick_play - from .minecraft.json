@@ -1,0 +1,55 @@
+{
+  "quickPlayData" : {
+    "2535411339184338" : 
+    [
+      {
+        "epochLastPlayedTimeMs" : 1732301454000,
+        "id" : "192.168.0.106:56658",
+        "javaInstance" : {
+          "configId" : "830a631c7f76c5545755c03d6c837e5b",
+          "game" : {
+            "gamemode" : "survival",
+            "type" : "multiplayer"
+          }
+        },
+        "name" : "Minecraft \uc11c\ubc84",
+        "source" : "Java"
+      },
+      {
+        "epochLastPlayedTimeMs" : 1732273506000,
+        "id" : "192.168.0.122:53960",
+        "javaInstance" : {
+          "configId" : "830a631c7f76c5545755c03d6c837e5b",
+          "game" : {
+            "gamemode" : "survival",
+            "type" : "multiplayer"
+          }
+        },
+        "name" : "Minecraft \uc11c\ubc84",
+        "source" : "Java"
+      },
+      {
+        "epochLastPlayedTimeMs" : 1732264842000,
+        "id" : "192.168.0.122:60500",
+        "javaInstance" : {
+          "configId" : "830a631c7f76c5545755c03d6c837e5b",
+          "game" : {
+            "gamemode" : "survival",
+            "type" : "multiplayer"
+          }
+        },
+        "name" : "Minecraft \uc11c\ubc84",
+        "source" : "Java"
+      },
+      {
+        "epochLastPlayedTimeMs" : 1731081062128,
+        "id" : "830a631c7f76c5545755c03d6c837e5b",
+        "javaInstance" : {
+          "configId" : "830a631c7f76c5545755c03d6c837e5b"
+        },
+        "source" : "Java"
+      }
+    ]
+  },
+  "version" : 2
+}
