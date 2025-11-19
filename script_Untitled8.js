@@ -77,14 +77,25 @@ async function f1() {
     //const data1 = await (await fetch("http://example.com/movies.json")).json();
     const data2 = await (await fetch("hypervr_binding_index - from hyperrogue-win64-free.json")).json();
     const data3 = await (await fetch("launcher_quick_play - from .minecraft.json")).json();
-    //const data4 = await (await fetch("data1_Untitled8.json")).json();
-    //const data5 = await (await fetch("data2_Untitled8.json")).json();
+    const data4 = await (await fetch("data1_Untitled8.json")).json();
+    const data5 = await (await fetch("data2_Untitled8.json")).json();
 
     //document.getElementById("Data1Output").innerText = data1;
     document.getElementById("Data2Output").innerText = data2;
     document.getElementById("Data3Output").innerText = data3;
-    //document.getElementById("Data4Output").innerText = data4;
-    //document.getElementById("Data5Output").innerText = data5;
+    document.getElementById("Data4Output").innerText = data4;
+    document.getElementById("Data5Output").innerText = data5;
+
+    document.getElementById("Data5Output").innerText += "\n\n" + data5["a"] + "\n" + data5["b"] + "\n" + data5["c"];
+    //(27:13:00) 오오..! ㅎㅎ 흠 ㅎㅎ
+
+    document.getElementById("Data2Output").innerText += "\n\n" + data2["bindings"];
+    //(27:14:47) 음... array? map? ... 을 그냥 텍스트로 바꾸려고 하면, (내용물들이 다 출력되는 건 지원하지 않고) 그냥 [object Object]라는 텍스트로 바뀌어 들어갈 뿐인 건가..? ... (27:16:04) 흠... ㅎㅎ
+
+    //... 오, 구글에 'javascript object to string' 검색해 보니, 'AI 개요'가 JSON-compatible object들에 대해서는 'JSON.stringify()' 메소드를 쓸 수 있다고 알려주넹~! ㅎㅎ (27:23:10) 오오! ㅎㅎ 흠 ㅎㅎ
+
+    document.getElementById("Data2Output").innerText += "\n\n" + JSON.stringify(data2);
+    //오 ㄷㄷㄷㄷㄷㄷ 개쩌넹~~!!! ㅎㅎ (27:24:08) 오오..!! ㅎㅎ 흠 ㅎㅎ
 }
 
 f1();
