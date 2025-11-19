@@ -1,0 +1,50 @@
+/*2025/11/19
+(이 프로그램 만든 시각: 14:51:19)*/
+
+/*
+table 만드는 CSS 프로그램은
+https://developer.mozilla.org/ko/docs/Learn_web_development/Core/Structuring_content/HTML_table_basics
+https://github.com/mdn/learning-area/blob/main/html/tables/basic/minimal-table.css
+을 참조해서 만들었다. ㅎㅎ (14:52:08) 흠 ㅎㅎ
+*/
+
+table
+{
+    border-collapse: collapse; /*오, 이게 없으면 표의 형태가 이상해져서 안 좋음... ㄷㄷㄷㄷ 중요한 명령어넹..! ㅎㅎ (15:02:12) 흠 ㅎㅎ*/
+    border: solid 2px black; /*(14:59:32)*/
+}
+
+td, th
+{
+    /*border: solid 1px black;*/ /*오오, 각 칸의 경계를 없애고, 색깔로 각 줄을 구분하니까 더 깔끔하고, 멋지고, ... 한 것 같넹..! ... ㅎㅎ (15:14:16) 오오..! ㅎㅎ 흠 ㅎㅎ*/
+    padding: 5px 10px;
+}
+
+/*
+tr
+{
+    border: solid 1px black;
+}
+표의 경계선 중 가로선만 그리고 싶다면, 이 코드를 사용하면 됨. ㅎㅎ (15:12:47) 흠 ㅎㅎ
+*/
+
+td
+{
+    text-align: center;
+    /*th는 'text-align: center'를 굳이 안 해도, 자동으로 중심 정렬이 되나 봐... ㄷㄷㄷㄷ (15:05:16) 흠... ㅎㅎ*/
+}
+
+th
+{
+    background-color: rgb(239, 223, 255);
+}
+
+tr:nth-child(odd) td
+{
+    background-color: rgb(247, 239, 255);
+}
+
+tr:nth-child(even) td
+{
+    background-color: white;
+}
