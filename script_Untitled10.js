@@ -1,5 +1,6 @@
-//2025/11/19
+//2025/11/19, 2025/11/21
 //(이 프로그램 만든 시각: 2025/11/19 15:54:10)
+//(시각 주석 중, 날짜가 없는 것들은 2025/11/19에 작성한 것들임 (2025/11/21 21:34:19))
 
 const NumberInput1 = document.getElementById("NumberInput1");
 const NumberInput2 = document.getElementById("NumberInput2");
@@ -38,17 +39,29 @@ EnterButton.addEventListener("click", function () {
 //-> 아래와 같이 새로 코드를 짬... ㅋㅋㅋㅋ (17:17:40) 흠 ㅎㅎ
 
 EnterButton.addEventListener("click", function () {
-    const num1 = parseInt(NumberInput1.value);
-    const num2 = parseInt(NumberInput2.value);
-    const num3 = parseInt(NumberInput3.value);
-
-    Output1.innerHTML +=
-                  num1.toString()
-        + " * " + num2.toString()
-        + " + " + num3.toString()
-        + " = " + (num1 * num2 + num3).toString()
-        + "<br>";
+    if(NumberInput1.value === "" || NumberInput2.value === "" || NumberInput3.value === "") //(2025/11/21 21:33:45)
+    {
+        Output1.innerHTML += "One of the inputs is blank.<br>"; //(2025/11/21 21:33:48)
+    }
+    else
+    {
+        const num1 = parseInt(NumberInput1.value);
+        const num2 = parseInt(NumberInput2.value);
+        const num3 = parseInt(NumberInput3.value);
+        
+        Output1.innerHTML +=
+                      num1.toString()
+            + " * " + num2.toString()
+            + " + " + num3.toString()
+            + " = " + (num1 * num2 + num3).toString()
+            + "<br>";
+    }
 });
 //(17:19:28)
 //오케이, 제대로, 정상적으로, ... 동작한다~~ ㅎㅎ (17:20:05) 오오..! ㅎㅎ 흠 ㅎㅎ
 //... 이제 빈 input, ... 을 handling하는 것만 잘 처리해 주면 되겠넹... ㅎㅎ (17:20:26) 흠... ㅎㅎ
+
+//오케이, 빈 input handling하는 코드도 넣었당~ ㅎㅎ (2025/11/21 21:35:43) 오오..! ㅎㅎ 흠 ㅎㅎ
+//... 근데 음수 (출력된 수식에 괄호가 없어서 마이너스 부호가 어색하게 붙어 있음) , 소수점 (그냥 parseInt를 사용해서 정수가 아닌 실수는 처리를 못함) , 과학 표기법 (1e6 같은 표기가 number 입력란에는 잘 입력이 되는데, 실제로 parseInt에 들어갔을 때에는 잘 처리가 안 되고 e의 앞부분 (왼쪽 부분) 에 적힌 정수까지만 인식이 되어서 계산되는 것 같음) 등은 아직 제대로 handling이 안 되긴 했넹... ㅋㅋㅋㅋ... (2025/11/21 21:38:42) 흠.... ㅎㅎ
+//... 음, 그리고, number 입력란에 (왠지 모르게) '--1', '--.', '-.-', '.--', '1-', '1--', '1-2', '1-2-', ... 같은 것들도 입력이 되긴 하는데... 이런 것들은 NumberInput1.value를 해서 계산에 활용하려고 시도하면 전부 다 그냥 "", 즉 빈 문자열로 계산이 되는 듯..? ... ㅎㅎ (21:45:11)
+//이게 왜 그런진 모르겠음... ㅋㅋㅋㅋ (number 입력란의 특성인 것 같긴 함...) (21:45:29) 흠.... ㅎㅎ
