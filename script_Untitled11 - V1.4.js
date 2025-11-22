@@ -192,7 +192,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][7];
+                HTMLTable += dataset[k1][7].toString(); //(29:04:54)
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
