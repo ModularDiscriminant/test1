@@ -8,6 +8,15 @@ const nUpperBoundInput = document.getElementById("n (upper bound) input");
 const lambdaLowerBoundInput = document.getElementById("lambda (lower bound) input");
 const lambdaUpperBoundInput = document.getElementById("lambda (upper bound) input"); //(28:57:41)
 
+const dLowerBoundInput = document.getElementById("d (lower bound) input");
+const dUpperBoundInput = document.getElementById("d (upper bound) input"); //(29:51:53)
+
+const nPrimeLowerBoundInput = document.getElementById("n' (lower bound) input");
+const nPrimeUpperBoundInput = document.getElementById("n' (upper bound) input"); //(29:52:10)
+
+const gLowerBoundInput = document.getElementById("g (lower bound) input");
+const gUpperBoundInput = document.getElementById("g (upper bound) input"); //(29:52:23)
+
 const SearchButton = document.getElementById("SearchButton");
 const OutputTable = document.getElementById("OutputTable");
 //(10:42:47)
@@ -21,6 +30,15 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
     const lambdaLowerBound = parseFloat(lambdaLowerBoundInput.value);
     const lambdaUpperBound = parseFloat(lambdaUpperBoundInput.value);
     //(... 아니면 parseInt, parseFloat, ... 함수 대신에 Number 함수, ... 를 써도 된..다..? ... ㅋㅋㅋㅋ (29:00:44) 흠... ㅎㅎ)
+
+    const dLowerBound = parseInt(dLowerBoundInput.value);
+    const dUpperBound = parseInt(dUpperBoundInput.value); //(29:53:10)
+
+    const nPrimeLowerBound = parseInt(nPrimeLowerBoundInput.value);
+    const nPrimeUpperBound = parseInt(nPrimeUpperBoundInput.value); //(29:53:32)
+
+    const gLowerBound = parseInt(gLowerBoundInput.value);
+    const gUpperBound = parseInt(gUpperBoundInput.value); //(29:53:49)
     
     OutputTable.innerHTML = "Loading..."; //(10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ)
 
@@ -85,7 +103,6 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         저렇게 짜는 건 (코드 가독성 및 해석, 코드 유지 보수, ... 등의 측면에서) 상당히 위험할 것 같음... . ㅎㅎ
         그래서, 그냥 조건문을 두 번 중첩해서, 매우 명시적으로 nLowerBound이 NaN일 가능성을 제외하고, 그 이후에야 조건문을 (편하고 안전하게) 사용해서 원하는 조건이 충족되는지를 체크하도록 했음... . ㅎㅎ (21:55:22) 흠... ㅎㅎ
         */
-        
         if(!Number.isNaN(nUpperBound))
         {
             if(!(dataset[k1][0] <= nUpperBound)) //난 부등식의 방향이 실제 수직선 상의 방향과 일치할 때 더 직관적이라고 보기 때문에, >= 연산자 (≥) 보다는 <= 연산자 (≤) 를 쓰는 걸 좀 더 선호함... . ㅎㅎ (21:57:32) 흠... ㅎㅎ
@@ -101,7 +118,6 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 continue;
             }
         }
-
         if(!Number.isNaN(lambdaUpperBound))
         {
             if(!(dataset[k1][7] <= lambdaUpperBound))
@@ -110,6 +126,54 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             }
         }
         //(29:03:18)
+
+        if(!Number.isNaN(dLowerBound))
+        {
+            if(!(dLowerBound <= dataset[k1][9]))
+            {
+                continue;
+            }
+        }
+        if(!Number.isNaN(dUpperBound))
+        {
+            if(!(dataset[k1][9] <= dUpperBound))
+            {
+                continue;
+            }
+        }
+        //(29:54:46)
+
+        if(!Number.isNaN(nPrimeLowerBound))
+        {
+            if(!(nPrimeLowerBound <= dataset[k1][12]))
+            {
+                continue;
+            }
+        }
+        if(!Number.isNaN(nPrimeUpperBound))
+        {
+            if(!(dataset[k1][12] <= nPrimeUpperBound))
+            {
+                continue;
+            }
+        }
+        //(29:55:47)
+
+        if(!Number.isNaN(gLowerBound))
+        {
+            if(!(gLowerBound <= dataset[k1][15]))
+            {
+                continue;
+            }
+        }
+        if(!Number.isNaN(gUpperBound))
+        {
+            if(!(dataset[k1][15] <= gUpperBound))
+            {
+                continue;
+            }
+        }
+        //(29:56:22)
 
         HTMLTable += "<tr> ";
 
