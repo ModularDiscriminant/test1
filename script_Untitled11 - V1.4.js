@@ -5,6 +5,9 @@
 const nLowerBoundInput = document.getElementById("n (lower bound) input");
 const nUpperBoundInput = document.getElementById("n (upper bound) input");
 
+const lambdaLowerBoundInput = document.getElementById("lambda (lower bound) input");
+const lambdaUpperBoundInput = document.getElementById("lambda (upper bound) input"); //(28:57:41)
+
 const SearchButton = document.getElementById("SearchButton");
 const OutputTable = document.getElementById("OutputTable");
 //(10:42:47)
@@ -14,6 +17,10 @@ const OutputTable = document.getElementById("OutputTable");
 SearchButton.addEventListener("click", async function () { //(10:46:51)
     const nLowerBound = parseInt(nLowerBoundInput.value); //input이 비어 있었는지 아닌지, 즉 nLowerBoundInput.value === ""였는지 아닌지는, nLowerBound가 NaN인지 아닌지로 판별할 수 있음. 즉 이렇게 입력값 검사 없이 바로 타입 변환을 해도, 아직 입력값이 valid한지 아닌지에 대한 정보도 사라지지 않고 남아 있어서 (NaN을 적절히 판별해 주기만 한다면) 괜찮을 것 같음... . ㅎㅎ (21:37:52) 흠 ㅎㅎ
     const nUpperBound = parseInt(nUpperBoundInput.value);
+
+    const lambdaLowerBound = parseFloat(lambdaLowerBoundInput.value);
+    const lambdaUpperBound = parseFloat(lambdaUpperBoundInput.value);
+    //(... 아니면 parseInt, parseFloat, ... 함수 대신에 Number 함수, ... 를 써도 된..다..? ... ㅋㅋㅋㅋ (29:00:44) 흠... ㅎㅎ)
     
     OutputTable.innerHTML = "Loading..."; //(10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ)
 
@@ -86,6 +93,23 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 continue;
             }
         }
+
+        if(!Number.isNaN(lambdaLowerBound))
+        {
+            if(!(lambdaLowerBound <= dataset[k1][7]))
+            {
+                continue;
+            }
+        }
+
+        if(!Number.isNaN(lambdaUpperBound))
+        {
+            if(!(dataset[k1][7] <= lambdaUpperBound))
+            {
+                continue;
+            }
+        }
+        //(29:03:18)
 
         HTMLTable += "<tr> ";
 
