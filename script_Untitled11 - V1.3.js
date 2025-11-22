@@ -101,11 +101,22 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
-        HTMLTable += dataset[k1][4];
+        HTMLTable += "$" + dataset[k1][4].replace(/\*/g, "") + "$";
+        /*
+        참고: dataset[k1][4]라는, (울프람 랭귀지에서 사용 가능한) (string 형태의) 수식을 LaTeX 문법에 맞게 바꾸기 위해, 가장 먼저 곱하기 연산 '*'를 제거해야 함... . ㅎㅎ (23:19:03)
+        ... 근데, 그냥 'dataset[k1][4].replace("*", "")'라고만 하면, 이건 dataset[k1][4]에서 찾을 수 있는 가장 첫 번째 '*'만을 제거 (empty string으로 치환) 해 줌. ㅎㅎ (23:15:00)
+        -> 고로, 찾을 수 있는 모든 '*'를 제거하려면 정규 표현식 (regular expression) 을 활용해야 함. 구글에 'javascript remove specific characters from string'라고 검색해 보니, 'AI 개요'가 두 개의 슬래시 ('/') 안에 제거할 문자를 넣고, 그 뒤에 'global flag'인 g를 붙여서 정규 표현식을 만든 후, 그걸 replace의 첫 번째 인자로 전달하면 된다고 해서 그대로 따라해 봄..! ㅎㅎ (23:17:53)
+        -> 근데, 그냥 특수문자인 '*'를 적을 수는 없으니 (슬래시 + 애스터리스크가 주석으로 인식되기도 하고, 애스터리스크 ('*') 자체가 정규 표현식에서 의미가 있는 문자인 것 같기도 함) , 이걸 이스케이프하기 위해서 '*'의 앞에 역슬래시를 붙여서 성공적으로 정규 표현식을 만들어 줬음..! ㅎㅎ (참고 - 이에 대한 도큐멘테이션:
+            https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Regular_expressions
+        )
+        (23:20:57) 오오..! ㅎㅎ 흠 ㅎㅎ
+        */
+        //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (23:05:52)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
-        HTMLTable += dataset[k1][5];
+        HTMLTable += "$" + dataset[k1][5].replace(/\*/g, "") + "$"; //(23:04:22)
+        //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (23:06:00)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
@@ -117,7 +128,8 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
-        HTMLTable += dataset[k1][8];
+        HTMLTable += "$" + dataset[k1][8].replace(/\*/g, "") + "$"; //(23:05:10)
+        //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (23:06:03)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
