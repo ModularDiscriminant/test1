@@ -161,7 +161,10 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][6];
+                if(dataset[k1][6].slice(0, 4) !== "Root") //dataset[k1][6] 안에 저장된 게, 울프람 랭귀지에서만 유용하게 사용될 수 있는 (?) Root[...] 꼴의 문자열 (울프람 랭귀지의 Root 오브젝트? ㅎㅎ) 이 아닌 경우에만 (즉, 뭔가 λ 값을 닫힌 식으로 정리할 수 있는 등, 출력된 결과를 유용하게 활용할 수 있는 경우에만) dataset[k1][6]에 저장된 문자열을 출력하라는 뜻... . ㅎㅎ (26:37:52) 오... ㅎㅎ 흠 ㅎㅎ
+                {
+                    HTMLTable += dataset[k1][6];
+                }
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
