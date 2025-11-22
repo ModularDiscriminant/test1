@@ -21,26 +21,31 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
     const len1 = dataset.length;
     let k1;
+
+    let HTMLTable;
     
-    OutputTable.innerHTML = len1.toString() + " data found in total <br><br> "; //(11:05:55)
-    OutputTable.innerHTML += '<table> <tr> <th scope="col">$n$</th> <th scope="col">$\epsilon$</th> </tr> '; //(11:11:03)
+    HTMLTable = len1.toString() + " data found in total <br><br> ";
+    HTMLTable += '<table> <tr> <th scope="col">$n$</th> <th scope="col">$\epsilon$</th> </tr> ';
 
-    for(k1 = 0; k1 < len1; k1++)
+    for(k1 = 0; k1 < 100 /*len1*/; k1++)
     {
-        OutputTable.innerHTML += "<tr> "; //(11:12:15)
+        HTMLTable += "<tr> ";
 
-        OutputTable.innerHTML += "<td>"; //(11:13:31)
-        OutputTable.innerHTML += dataset[k1][0]; //(11:14:22)
-        OutputTable.innerHTML += "</td> "; //(11:13:34)
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][0];
+        HTMLTable += "</td> ";
 
-        OutputTable.innerHTML += "<td>";
-        OutputTable.innerHTML += dataset[k1][2]; //(11:14:30)
-        OutputTable.innerHTML += "</td> ";
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][2];
+        HTMLTable += "</td> ";
         
-        OutputTable.innerHTML += "</tr> "; //(11:12:59)
+        HTMLTable += "</tr> ";
     }
 
-    OutputTable.innerHTML += "</table> "; //(11:11:06)
+    HTMLTable += "</table>";
+
+    OutputTable.innerHTML = HTMLTable; //(17:21:23)
+    //오케이, 이런 식으로 따로 문자열 변수 (HTMLTable) 를 만들어서 거기다 HTML 코드를 전부 집어넣고, 그걸 ('<table> ... </table>'이라는 format이 완성된 채로) 한 번에 OutputTable.innerHTML에 집어넣어서 innerHTML을 업데이트해야 문제없이 제대로 표가 출력되는구나~! ㅎㅎ (17:24:49) 오오..! ㅎㅎ 흠 ㅎㅎ
 });
 
 //OutputTable.innerHTML += '<table> <tr> <th scope="col">$n$</th> <th scope="col">$n^2$</th> </tr> <tr> <td>2</td> <td>4</td> </tr> </table> <br><br> ';
