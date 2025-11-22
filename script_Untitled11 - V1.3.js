@@ -21,10 +21,14 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
 
 
+    //전체 반복문에 관련된 변수들 (반복문 전체에 얽혀 있는 'global한' 변수들) (25:45:34)
     const len1 = dataset.length;
     let count = 0; //(21:58:34)
-    let n, matrix, phi, nPrime, MatrixPrime, phiPrime;
-    let k1, k2, k3;
+    let k1;
+
+    //반복문의 각 턴 안에서만 관련이 있고, 사용이 되는 변수들 (반복문의 한 턴 안에서만 얽힌 'local한' 변수들) (25:46:05)
+    let n, matrix, phi, CyclesWOCrit, Cycle1WOCrit, nPrime, MatrixPrime, phiPrime; //(중복 계산 방지용 변수들 (25:46:27))
+    let len2, len3, k2, k3; //(len2, len3 역시 중복 계산 방지용 변수임 (25:46:51))
 
     let HTMLTable;
     
@@ -106,7 +110,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                         for(k3 = 1; k3 < n; k3++)
                         {
                             HTMLTable += " & ";
-                            HTMLTable += matrix[k2][k3].toString();
+                            HTMLTable += matrix[k2][k3].toString(); //(CyclesWOCrit 리스트의 경우에 그 각 항목 (리스트) 을 따로 Cycle1WOCrit이라는 변수에 저장해서, 두 번째 반복문 (k3의 반복문) 안에서는 Cycle1WOCrit[k3]과 같이 간편하게 항목을 참조하듯이... 이 경우에도 matrix[k2] (리스트) (matrix의 한 row) 를 따로 하나의 변수에 저장해서, 중복 계산을 방지하는 게 조금 더 좋으..려나..? ... (... 이게 실제로 계산량, 계산 시간, ... 을 줄여 주려..나? ...) (26:07:15) 오.... ㅎㅎ 흠... ㅎㅎ)
                         }
                     } //(24:24:30)
                     //('&'와 '\\'가 redundant하지 않고 정확한 개수만큼 들어가게 하고 싶은데, if 문을 써서 굳이 계산량을 늘리고 싶지는 않고, 그러면서 'n - 1'이라는 값을 계속해서 중복 계산하고 싶지도 않아서 (...) , 이렇게 각 반복문에서 가장 첫 번째 턴을 분리해 내는 방식으로 코드를 짤 수밖에 없었음 (이게 최선의 코드였음) ... . ㅎㅎ (24:25:56) 흠... ㅎㅎ)
@@ -173,8 +177,37 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 HTMLTable += dataset[k1][9].toString(); //(24:19:48)
             HTMLTable += "</td> ";
 
+            CyclesWOCrit = dataset[k1][10];
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][10];
+                len2 = CyclesWOCrit.length;
+                if(len2 === 0)
+                {
+                    HTMLTable += "{}";
+                }
+                else
+                {
+                    HTMLTable += "{";
+                    for(k2 = 0; k2 < len2; k2++)
+                    {
+                        if(k2 !== 0) //이 k2의 반복문은, 한 턴이 좀 복잡하게 생긴 것 같아서 그냥 이렇게 if 문을 써서 (살짝 계산량이 증가하더라도) 코드 가독성을 지나치게 떨어뜨리지 않는 편이 낫다고 판단함... . ㅎㅎ (25:59:23) 흠... ㅎㅎ
+                        {
+                            HTMLTable += ", ";
+                        }
+
+                        Cycle1WOCrit = CyclesWOCrit[k2];
+                        len3 = Cycle1WOCrit.length;
+
+                        HTMLTable += "(";
+                        HTMLTable += Cycle1WOCrit[0].toString();
+                        for(k3 = 1; k3 < len3; k3++)
+                        {
+                            HTMLTable += ", ";
+                            HTMLTable += Cycle1WOCrit[k3].toString();
+                        }
+                        HTMLTable += ")";
+                    }
+                    HTMLTable += "}";
+                }
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
