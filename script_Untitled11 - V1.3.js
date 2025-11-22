@@ -37,7 +37,6 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         + '<th scope="col">browsable stretch factor (leading eigenvalue) $\\lambda$</th> '
         + '<th scope="col">numerical value of $\\lambda$</th> '
         + '<th scope="col">minimal polynomial of $\\lambda$</th> '
-        + '<th scope="col">factorization of minimal polynomial of $\\lambda$</th> '
         + '<th scope="col">degree $d$ of $\\lambda$</th> '
         + '<th scope="col">cycles of $\\phi$ without critical points</th> '
         + '<th scope="col">minimality of $M$</th> '
@@ -47,7 +46,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         + '<th scope="col">genus $g$</th> '
         + '<th scope="col">coronality of $\\lambda$</th> '
         + '<th scope="col">determinant $\\det(M)$</th> '
-        + '</tr> '; //(22:18:56)
+        + '</tr> '; //(22:40:43)
     //문자열 안에서 그냥 '$\epsilon$'이라고 쓰면 '\'가 다음에 나온 문자인 'e'랑 붙어서 특별한 문자? 이스케이프 시퀀스? ... 인 '\e'로 인식되는..? 것 같아서 (그래서 출력은 그냥 '\'가 사라진 것처럼, $epsilon$을 출력한 결과와 동일한 결과가 나옴) , 문자열 안의 '\'를 제대로 기술하기 위해 이스케이프 시퀀스 '\\'를 사용해 줘야 올바르게 출력이 되는 것 같음... . ㅎㅎ (18:09:45)
     //즉, 조금 번거롭긴 해도, 매번 '$\epsilon$' 같이 쓰지 않고 '$\\epsilon$' 같이 써 줘야 올바르게 결과가 나오게 되는 듯..? ... ㅎㅎ (18:10:13) 옹... ㅎㅎ 흠... ㅎㅎ
 
