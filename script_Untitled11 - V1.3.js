@@ -23,7 +23,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
     const len1 = dataset.length;
     let count = 0; //(21:58:34)
-    let n, matrix;
+    let n, matrix, nPrime, MatrixPrime;
     let k1, k2, k3;
 
     let HTMLTable;
@@ -165,12 +165,31 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 HTMLTable += dataset[k1][11];
             HTMLTable += "</td> ";
 
+            nPrime = dataset[k1][12];
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][12].toString(); //(24:19:52)
+                HTMLTable += nPrime.toString(); //(24:36:57)
             HTMLTable += "</td> ";
 
+            MatrixPrime = dataset[k1][13]; //(24:37:12)
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][13];
+                HTMLTable += "\\begin{pmatrix} ";
+                    HTMLTable += MatrixPrime[0][0].toString();
+                    for(k3 = 1; k3 < nPrime; k3++)
+                    {
+                        HTMLTable += " & ";
+                        HTMLTable += MatrixPrime[0][k3].toString();
+                    }
+                    for(k2 = 1; k2 < nPrime; k2++)
+                    {
+                        HTMLTable += " \\\\ ";
+                        HTMLTable += MatrixPrime[k2][0].toString();
+                        for(k3 = 1; k3 < nPrime; k3++)
+                        {
+                            HTMLTable += " & ";
+                            HTMLTable += MatrixPrime[k2][k3].toString();
+                        }
+                    } //(24:38:50)
+                HTMLTable += " \\end{pmatrix}";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
