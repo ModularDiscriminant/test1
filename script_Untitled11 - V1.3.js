@@ -180,34 +180,30 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             CyclesWOCrit = dataset[k1][10];
             HTMLTable += "<td>";
                 len2 = CyclesWOCrit.length;
-                if(len2 === 0)
+                HTMLTable += "{";
+                //HTMLTable += "$\\{"; //CyclesWOCrit를 출력할 때에는, 굳이 LaTeX으로 출력할 필요 없을 것 같아서, 굳이 웹페이지 로딩 시에 MathJax가 할 일을 (그리고 로딩 시간을) 늘리지 않아도 될 것 같아서... CyclesWOCrit을 출력할 시에는 딱히 LaTeX을 쓰지 않고, 그냥 문자열 형태로 출력하기로 결정함... . ㅎㅎ (26:13:49) 흠... ㅎㅎ
+                for(k2 = 0; k2 < len2; k2++)
                 {
-                    HTMLTable += "{}";
-                }
-                else
-                {
-                    HTMLTable += "{";
-                    for(k2 = 0; k2 < len2; k2++)
+                    if(k2 !== 0) //이 k2의 반복문은, 한 턴이 좀 복잡하게 생긴 것 같아서 그냥 이렇게 if 문을 써서 (살짝 계산량이 증가하더라도) 코드 가독성을 지나치게 떨어뜨리지 않는 편이 낫다고 판단함... . ㅎㅎ (25:59:23) 흠... ㅎㅎ
+                    //또한 이렇게 if 문으로, 반복문에서 k2 = 0인 경우만 제외하고 콤마를 찍는 식으로 코딩을 하면, (k2가 0부터 시작해도 돼서, len2가 1 이상일 필요가 없으므로) 반복문을 시작하기 전에 len2가 0인 경우를 따로 분리하는 예외 처리를 하지 않아도 된다는 이점이 있음. ㅎㅎ (26:02:56) 흠 ㅎㅎ
                     {
-                        if(k2 !== 0) //이 k2의 반복문은, 한 턴이 좀 복잡하게 생긴 것 같아서 그냥 이렇게 if 문을 써서 (살짝 계산량이 증가하더라도) 코드 가독성을 지나치게 떨어뜨리지 않는 편이 낫다고 판단함... . ㅎㅎ (25:59:23) 흠... ㅎㅎ
-                        {
-                            HTMLTable += ", ";
-                        }
-
-                        Cycle1WOCrit = CyclesWOCrit[k2];
-                        len3 = Cycle1WOCrit.length;
-
-                        HTMLTable += "(";
-                        HTMLTable += Cycle1WOCrit[0].toString();
-                        for(k3 = 1; k3 < len3; k3++)
-                        {
-                            HTMLTable += ", ";
-                            HTMLTable += Cycle1WOCrit[k3].toString();
-                        }
-                        HTMLTable += ")";
+                        HTMLTable += ", ";
                     }
-                    HTMLTable += "}";
+
+                    Cycle1WOCrit = CyclesWOCrit[k2];
+                    len3 = Cycle1WOCrit.length;
+
+                    HTMLTable += "(";
+                    HTMLTable += Cycle1WOCrit[0].toString();
+                    for(k3 = 1; k3 < len3; k3++)
+                    {
+                        HTMLTable += ", ";
+                        HTMLTable += Cycle1WOCrit[k3].toString();
+                    }
+                    HTMLTable += ")";
                 }
+                HTMLTable += "}";
+                //HTMLTable += "\\}$";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
