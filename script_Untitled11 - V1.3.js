@@ -39,7 +39,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         + '<th scope="col">permutation $\\phi$</th> '
         + '<th scope="col">characteristic polynomial $\\chi_M(x)$</th> '
         + '<th scope="col">factorization of characteristic polynomial $\\chi_M(x)$</th> '
-        + '<th scope="col">browsable stretch factor (leading eigenvalue) $\\lambda$</th> '
+        + '<th scope="col">closed form of browsable stretch factor (leading eigenvalue) $\\lambda$</th> ' //(28:31:39)
         + '<th scope="col">numerical value of $\\lambda$</th> '
         + '<th scope="col">minimal polynomial of $\\lambda$</th> '
         + '<th scope="col">degree $d$ of $\\lambda$</th> '
