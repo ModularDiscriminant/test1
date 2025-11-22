@@ -92,7 +92,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
             matrix = dataset[k1][1];
             HTMLTable += "<td>";
-                HTMLTable += "\\begin{pmatrix} ";
+                HTMLTable += "$\\begin{pmatrix} ";
                     HTMLTable += matrix[0][0].toString();
                     for(k3 = 1; k3 < n; k3++)
                     {
@@ -110,7 +110,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                         }
                     } //(24:24:30)
                     //('&'와 '\\'가 redundant하지 않고 정확한 개수만큼 들어가게 하고 싶은데, if 문을 써서 굳이 계산량을 늘리고 싶지는 않고, 그러면서 'n - 1'이라는 값을 계속해서 중복 계산하고 싶지도 않아서 (...) , 이렇게 각 반복문에서 가장 첫 번째 턴을 분리해 내는 방식으로 코드를 짤 수밖에 없었음 (이게 최선의 코드였음) ... . ㅎㅎ (24:25:56) 흠... ㅎㅎ)
-                HTMLTable += " \\end{pmatrix}";
+                HTMLTable += " \\end{pmatrix}$";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
@@ -172,7 +172,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
             MatrixPrime = dataset[k1][13]; //(24:37:12)
             HTMLTable += "<td>";
-                HTMLTable += "\\begin{pmatrix} ";
+                HTMLTable += "$\\begin{pmatrix} ";
                     HTMLTable += MatrixPrime[0][0].toString();
                     for(k3 = 1; k3 < nPrime; k3++)
                     {
@@ -189,7 +189,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                             HTMLTable += MatrixPrime[k2][k3].toString();
                         }
                     } //(24:38:50)
-                HTMLTable += " \\end{pmatrix}";
+                HTMLTable += " \\end{pmatrix}$";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
