@@ -23,7 +23,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
 
     const len1 = dataset.length;
     let count = 0; //(21:58:34)
-    let n, matrix, nPrime, MatrixPrime;
+    let n, matrix, phi, nPrime, MatrixPrime, phiPrime;
     let k1, k2, k3;
 
     let HTMLTable;
@@ -117,8 +117,24 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 HTMLTable += dataset[k1][2].toString(); //(24:19:43)
             HTMLTable += "</td> ";
 
+            phi = dataset[k1][3];
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][3];
+                HTMLTable += "$\\begin{pmatrix} ";
+                    //HTMLTable += (0).toString();
+                    HTMLTable += "0"; //(25:30:39)
+                    for(k3 = 1; k3 <= n; k3++)
+                    {
+                        HTMLTable += " & ";
+                        HTMLTable += k3.toString();
+                    }
+                    HTMLTable += " \\\\ ";
+                    HTMLTable += phi[0].toString();
+                    for(k3 = 1; k3 <= n; k3++) //위에서 browsable matrix를 출력하는 코드를 작성할 때와 analogous하게 프로그래밍하기 위해, 몇 번째 column인지를 결정하는 dummy variable로 (k2가 아니라) k3를 사용함. ㅎㅎ (25:31:53) 흠 ㅎㅎ
+                    {
+                        HTMLTable += " & ";
+                        HTMLTable += phi[k3].toString();
+                    }
+                HTMLTable += " \\end{pmatrix}$";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
@@ -192,8 +208,24 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
                 HTMLTable += " \\end{pmatrix}$";
             HTMLTable += "</td> ";
 
+            phiPrime = dataset[k1][14];
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][14];
+                HTMLTable += "$\\begin{pmatrix} ";
+                    //HTMLTable += (0).toString();
+                    HTMLTable += "0"; //(25:30:39)
+                    for(k3 = 1; k3 <= nPrime; k3++)
+                    {
+                        HTMLTable += " & ";
+                        HTMLTable += k3.toString();
+                    }
+                    HTMLTable += " \\\\ ";
+                    HTMLTable += phiPrime[0].toString();
+                    for(k3 = 1; k3 <= nPrime; k3++)
+                    {
+                        HTMLTable += " & ";
+                        HTMLTable += phiPrime[k3].toString();
+                    }
+                HTMLTable += " \\end{pmatrix}$";
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
