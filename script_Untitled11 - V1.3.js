@@ -211,7 +211,20 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][11];
+                //HTMLTable += dataset[k1][11];
+                if(dataset[k1][11])
+                {
+                    //HTMLTable += "T";
+                    HTMLTable += "O";
+                    //HTMLTable += "○";
+                    //true / false를 어떤 식으로 출력해야 표 상에서 가장 가독성이 좋을지 고민하다가, (ASCII code 안에서 해결되므로, 특수문자가 깨질 걱정 같은 걸 하지 않아도 되기도 하고, ...) 가장 가독성이 괜찮아 보이는 (대문자) 알파벳 'O'와 'X'를 사용하기로 함... . ... ㅎㅎ (27:00:27) 흠... ㅎㅎ
+                }
+                else
+                {
+                    //HTMLTable += "F";
+                    HTMLTable += "X";
+                    //HTMLTable += "×";
+                }
             HTMLTable += "</td> ";
 
             nPrime = dataset[k1][12];
@@ -266,7 +279,19 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
-                HTMLTable += dataset[k1][16];
+                //HTMLTable += dataset[k1][16];
+                if(dataset[k1][16]) //(27:02:04)
+                {
+                    //HTMLTable += "T";
+                    HTMLTable += "O";
+                    //HTMLTable += "○";
+                }
+                else
+                {
+                    //HTMLTable += "F";
+                    HTMLTable += "X";
+                    //HTMLTable += "×";
+                }
             HTMLTable += "</td> ";
 
             HTMLTable += "<td>";
