@@ -89,7 +89,71 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         HTMLTable += "</td> ";
 
         HTMLTable += "<td>";
+        HTMLTable += dataset[k1][1];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
         HTMLTable += dataset[k1][2];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][3];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][4];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][5];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][6];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][7];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][8];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][9];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][10];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][11];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][12];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][13];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][14];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][15];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][16];
+        HTMLTable += "</td> ";
+
+        HTMLTable += "<td>";
+        HTMLTable += dataset[k1][17];
         HTMLTable += "</td> ";
         
         HTMLTable += "</tr> ";
