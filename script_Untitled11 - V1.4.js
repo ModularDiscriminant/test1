@@ -60,7 +60,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
     const gUpperBound = parseInt(gUpperBoundInput.value); //(29:53:49)
 
     const ShowDataWithCoronalityEqualsTrue = ShowDataWithCoronalityEqualsTrueInput.checked;
-    const ShowDataWithCoronalityEqualsFalse = ShowDataWithCoronalityEqualsTrueInput.checked; //(2025/11/24 7:58:47)
+    const ShowDataWithCoronalityEqualsFalse = ShowDataWithCoronalityEqualsFalseInput.checked; //(2025/11/24 8:19:04)
 
     const ShowDataWithDetMEquals1 = ShowDataWithDetMEquals1Input.checked;
     const ShowDataWithDetMEqualsNeg1 = ShowDataWithDetMEqualsNeg1Input.checked; //(2025/11/24 8:00:50)
@@ -242,7 +242,7 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         //(2025/11/24 8:06:50)
 
 
-        
+
         HTMLTable += "<tr> ";
 
             n = dataset[k1][0];
