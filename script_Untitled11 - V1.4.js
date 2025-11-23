@@ -15,11 +15,20 @@ const lambdaUpperBoundInput = document.getElementById("lambda (upper bound) inpu
 const dLowerBoundInput = document.getElementById("d (lower bound) input");
 const dUpperBoundInput = document.getElementById("d (upper bound) input"); //(29:51:53)
 
+const ShowDataWithMinimalityEqualsTrueInput = document.getElementById("Show data with minimality = true");
+const ShowDataWithMinimalityEqualsFalseInput = document.getElementById("Show data with minimality = false"); //(2025/11/24 7:54:15)
+
 const nPrimeLowerBoundInput = document.getElementById("n' (lower bound) input");
 const nPrimeUpperBoundInput = document.getElementById("n' (upper bound) input"); //(29:52:10)
 
 const gLowerBoundInput = document.getElementById("g (lower bound) input");
 const gUpperBoundInput = document.getElementById("g (upper bound) input"); //(29:52:23)
+
+const ShowDataWithCoronalityEqualsTrueInput = document.getElementById("Show data with coronality = true");
+const ShowDataWithCoronalityEqualsFalseInput = document.getElementById("Show data with coronality = false"); //(2025/11/24 7:55:11)
+
+const ShowDataWithDetMEquals1Input = document.getElementById("Show data with det(M) = 1");
+const ShowDataWithDetMEqualsNeg1Input = document.getElementById("Show data with det(M) = -1"); //(2025/11/24 7:56:04)
 
 const SearchButton = document.getElementById("SearchButton");
 const OutputTable = document.getElementById("OutputTable");
@@ -41,11 +50,22 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
     const dLowerBound = parseInt(dLowerBoundInput.value);
     const dUpperBound = parseInt(dUpperBoundInput.value); //(29:53:10)
 
+    const ShowDataWithMinimalityEqualsTrue = ShowDataWithMinimalityEqualsTrueInput.checked;
+    const ShowDataWithMinimalityEqualsFalse = ShowDataWithMinimalityEqualsFalseInput.checked; //(2025/11/24 7:57:35)
+
     const nPrimeLowerBound = parseInt(nPrimeLowerBoundInput.value);
     const nPrimeUpperBound = parseInt(nPrimeUpperBoundInput.value); //(29:53:32)
 
     const gLowerBound = parseInt(gLowerBoundInput.value);
     const gUpperBound = parseInt(gUpperBoundInput.value); //(29:53:49)
+
+    const ShowDataWithCoronalityEqualsTrue = ShowDataWithCoronalityEqualsTrueInput.checked;
+    const ShowDataWithCoronalityEqualsFalse = ShowDataWithCoronalityEqualsTrueInput.checked; //(2025/11/24 7:58:47)
+
+    const ShowDataWithDetMEquals1 = ShowDataWithDetMEquals1Input.checked;
+    const ShowDataWithDetMEqualsNeg1 = ShowDataWithDetMEqualsNeg1Input.checked; //(2025/11/24 8:00:50)
+
+
     
     OutputTable.innerHTML = "Loading..."; //(10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ)
 
@@ -159,6 +179,16 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         }
         //(29:54:46)
 
+        if((!ShowDataWithMinimalityEqualsTrue) && dataset[k1][11])
+        {
+            continue;
+        }
+        if((!ShowDataWithMinimalityEqualsFalse) && (!dataset[k1][11]))
+        {
+            continue;
+        }
+        //(2025/11/24 8:03:42)
+
         if(!Number.isNaN(nPrimeLowerBound))
         {
             if(!(nPrimeLowerBound <= dataset[k1][12]))
@@ -191,6 +221,28 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
         }
         //(29:56:22)
 
+        if((!ShowDataWithCoronalityEqualsTrue) && dataset[k1][16])
+        {
+            continue;
+        }
+        if((!ShowDataWithCoronalityEqualsFalse) && (!dataset[k1][16]))
+        {
+            continue;
+        }
+        //(2025/11/24 8:04:37)
+
+        if((!ShowDataWithDetMEquals1) && (dataset[k1][17] === 1))
+        {
+            continue;
+        }
+        if((!ShowDataWithDetMEqualsNeg1) && (dataset[k1][17] === -1))
+        {
+            continue;
+        }
+        //(2025/11/24 8:06:50)
+
+
+        
         HTMLTable += "<tr> ";
 
             n = dataset[k1][0];
