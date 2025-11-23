@@ -1,9 +1,13 @@
-//2025/11/22
+//2025/11/22 (날짜가 없는 시각 주석은 모두 2025/11/22에 작성한 것임)
+//다음 편집일: 2025/11/24
 
 
 
 const nLowerBoundInput = document.getElementById("n (lower bound) input");
 const nUpperBoundInput = document.getElementById("n (upper bound) input");
+
+const ShowDataWithEpsilonEquals1Input = document.getElementById("Show data with epsilon = 1");
+const ShowDataWithEpsilonEqualsNeg1Input = document.getElementById("Show data with epsilon = -1"); //(2025/11/24 7:15:53)
 
 const lambdaLowerBoundInput = document.getElementById("lambda (lower bound) input");
 const lambdaUpperBoundInput = document.getElementById("lambda (upper bound) input"); //(28:57:41)
@@ -26,6 +30,9 @@ const OutputTable = document.getElementById("OutputTable");
 SearchButton.addEventListener("click", async function () { //(10:46:51)
     const nLowerBound = parseInt(nLowerBoundInput.value); //input이 비어 있었는지 아닌지, 즉 nLowerBoundInput.value === ""였는지 아닌지는, nLowerBound가 NaN인지 아닌지로 판별할 수 있음. 즉 이렇게 입력값 검사 없이 바로 타입 변환을 해도, 아직 입력값이 valid한지 아닌지에 대한 정보도 사라지지 않고 남아 있어서 (NaN을 적절히 판별해 주기만 한다면) 괜찮을 것 같음... . ㅎㅎ (21:37:52) 흠 ㅎㅎ
     const nUpperBound = parseInt(nUpperBoundInput.value);
+
+    const ShowDataWithEpsilonEquals1 = ShowDataWithEpsilonEquals1Input.checked;
+    const ShowDataWithEpsilonEqualsNeg1 = ShowDataWithEpsilonEqualsNeg1Input.checked; //(2025/11/24 7:19:31)
 
     const lambdaLowerBound = parseFloat(lambdaLowerBoundInput.value);
     const lambdaUpperBound = parseFloat(lambdaUpperBoundInput.value);
@@ -109,6 +116,15 @@ SearchButton.addEventListener("click", async function () { //(10:46:51)
             {
                 continue;
             }
+        }
+
+        if((!ShowDataWithEpsilonEquals1) && (dataset[k1][2] === 1))
+        {
+            continue; //(2025/11/24 7:29:49)
+        }
+        if((!ShowDataWithEpsilonEqualsNeg1) && (dataset[k1][2] === -1))
+        {
+            continue; //(2025/11/24 7:30:17)
         }
 
         if(!Number.isNaN(lambdaLowerBound))
