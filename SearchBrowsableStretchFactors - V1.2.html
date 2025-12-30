@@ -1,0 +1,127 @@
+<!--2025/12/31 (이 문서 시작한 시각: 2025/12/31 5:47:07)-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Browsable Stretch Factors - V1.2</title>
+
+    <link href="style_Untitled9_table.css" rel="stylesheet" type="text/css">
+    <!--"style.css" 자리에, 적절한 원하는 css 파일의 이름을 삽입할 것 (2025/8/19 25:29:43)-->
+
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <!--
+    https://m.blog.naver.com/mathesis_time/222108156490
+    이 글에서 가져옴~! ㅎㅎ (2025/8/17 19:38:20) 오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
+</head>
+<body>
+    <h1>Search Browsable Stretch Factors - V1.2</h1>
+
+    <!--Current dataset: BrowsableStretchFactorDatasetV1.1Size2To13.json <br><br><br><br>--> <!--(2025/12/25 24:31:42)-->
+    Current dataset: the concatenation of
+    <ol>
+        <li>BrowsableStretchFactorDatasetV1.1Size2To12.json &nbsp;&nbsp; (containing 24418 data)</li> <!--(띄어쓰기를 4번 함 (2025/12/25 27:24:50))-->
+        <li>BrowsableStretchFactorDatasetV1.1Size13.json &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (containing 28644 data)</li> <!--(띄어쓰기를 10번 함 (2025/12/25 27:25:04))-->
+    </ol>
+    (53062 data in total)
+    <br><br><br><br> <!--(2025/12/25 27:25:25)-->
+
+    
+
+    <label for="n (lower bound) input">size $n$ (lower bound) :</label> <br>
+    <input type="number" id="n (lower bound) input"></input> <br><br>
+
+    <label for="n (upper bound) input">size $n$ (upper bound) :</label> <br>
+    <input type="number" id="n (upper bound) input"></input> <br><br>
+
+    <!--(2025/11/22 10:40:20)-->
+
+    <label for="Show data with epsilon = 1">Show data with $\epsilon = 1$</label>
+    <input type="checkbox" id="Show data with epsilon = 1" checked></input> <br><br>
+
+    <label for="Show data with epsilon = -1">Show data with $\epsilon = -1$</label>
+    <input type="checkbox" id="Show data with epsilon = -1" checked></input> <br><br>
+
+    <!--(2025/11/24 7:10:23)-->
+
+    <label for="lambda (lower bound) input">browsable stretch factor $\lambda$ (lower bound) :</label> <br>
+    <input type="number" id="lambda (lower bound) input"></input> <br><br>
+
+    <label for="lambda (upper bound) input">browsable stretch factor $\lambda$ (upper bound) :</label> <br>
+    <input type="number" id="lambda (upper bound) input"></input> <br><br>
+
+    <!--(2025/11/22 28:52:06)-->
+
+    <label for="d (lower bound) input">degree $d$ of $\lambda$ (lower bound) :</label> <br>
+    <input type="number" id="d (lower bound) input"></input> <br><br>
+
+    <label for="d (upper bound) input">degree $d$ of $\lambda$ (upper bound) :</label> <br>
+    <input type="number" id="d (upper bound) input"></input> <br><br>
+
+    <!--(2025/11/22 29:46:47)-->
+
+    <label for="Show data with minimality = true">Show data with minimality of $M$ = true (O)</label>
+    <input type="checkbox" id="Show data with minimality = true" checked></input> <br><br>
+
+    <label for="Show data with minimality = false">Show data with minimality of $M$ = false (X)</label>
+    <input type="checkbox" id="Show data with minimality = false" checked></input> <br><br>
+
+    <!--(2025/11/24 7:43:28)-->
+
+    <label for="n' (lower bound) input">minimalized size $n'$ (lower bound) :</label> <br>
+    <input type="number" id="n' (lower bound) input"></input> <br><br>
+
+    <label for="n' (upper bound) input">minimalized size $n'$ (upper bound) :</label> <br>
+    <input type="number" id="n' (upper bound) input"></input> <br><br>
+
+    <!--(2025/11/22 29:47:47)-->
+
+    <label for="g (lower bound) input">genus $g$ (lower bound) :</label> <br>
+    <input type="number" id="g (lower bound) input"></input> <br><br>
+
+    <label for="g (upper bound) input">genus $g$ (upper bound) :</label> <br>
+    <input type="number" id="g (upper bound) input"></input> <br><br>
+
+    <!--(2025/11/22 29:50:15)-->
+
+    <label for="Show data with coronality = true">Show data with coronality of $\lambda$ = true (O)</label>
+    <input type="checkbox" id="Show data with coronality = true" checked></input> <br><br>
+
+    <label for="Show data with coronality = false">Show data with coronality of $\lambda$ = false (X)</label>
+    <input type="checkbox" id="Show data with coronality = false" checked></input> <br><br>
+
+    <!--(2025/11/24 7:48:27)-->
+
+    <label for="Show data with det(M) = 1">Show data with determinant $\det(M) = 1$</label>
+    <input type="checkbox" id="Show data with det(M) = 1" checked></input> <br><br>
+
+    <label for="Show data with det(M) = -1">Show data with determinant $\det(M) = -1$</label>
+    <input type="checkbox" id="Show data with det(M) = -1" checked></input> <br><br>
+
+    <!--(2025/11/24 7:51:46)-->
+
+    <button id="SearchButton">Search</button> <br><br>
+
+    <div id="OutputTable"></div>
+
+    <!--(2025/11/22 10:40:20)-->
+
+
+
+    <br><br><br><br><br><br>
+    <a href="index.html">Go Back</a>
+    
+    <script src="script_SearchBrowsableStretchFactors - V1.2.js"></script>
+    <!--"script.js" 자리에, 적절한 원하는 js (자바스크립트) 파일의 이름을 삽입할 것 (2025/10/12 23:07:47)-->
+</body>
+</html>
