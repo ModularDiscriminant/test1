@@ -30,8 +30,8 @@ const ShowDataWithDetMEquals1Input = document.getElementById("Show data with det
 const ShowDataWithDetMEqualsNeg1Input = document.getElementById("Show data with det(M) = -1"); //(2025/11/24 7:56:04)
 
 const SearchButton = document.getElementById("SearchButton");
-const OutputTable = document.getElementById("OutputTable");
-//(2025/11/22 10:42:47)
+const InformationOutput = document.getElementById("InformationOutput"); //(2025/12/31 10:17:22)
+const TableOutput = document.getElementById("TableOutput"); //(2025/11/22 10:42:47) (2025/12/31 10:14:18에 수정함)
 
 
 
@@ -66,7 +66,8 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
 
 
     
-    OutputTable.innerHTML = "Loading..."; //(2025/11/22 10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (2025/11/22 10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ)
+    InformationOutput.innerHTML = "Loading..."; //(2025/11/22 10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (2025/11/22 10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ) (2025/12/31 10:19:32에 수정함)
+    TableOutput.innerHTML = ""; //(2025/12/31 10:20:17)
 
     //const dataset = await (await fetch("BrowsableStretchFactorDatasetV1.1Size2To13.json")).json();
     //100MB가 넘는 파일의 경우 GitHub에 Git LFS를 사용해서 업로드해야 하는데, 그렇게 할 경우 어차피 GitHub Pages에서 불러올 수가 없어서... 그냥 데이터셋을 100MB 미만의 데이터셋 2개로 분할하고, 로드한 후 병합하는 방법을 써 보기로 함 (2025/12/25 26:59:31)
@@ -86,6 +87,8 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
     let len2, len3, k2, k3; //(len2, len3 역시 중복 계산 방지용 변수임 (2025/11/22 25:46:51))
 
     let HTMLTable;
+
+    let information; //(2025/12/31 10:22:15)
     
     HTMLTable = '<table> <tr> '
         + '<th scope="col">size $n$</th> '
@@ -464,10 +467,14 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
 
     HTMLTable += "</table>";
 
-    OutputTable.innerHTML = count.toString() + " data found in total <br><br> " + HTMLTable; //(2025/11/22 22:01:30)
-    //오케이, 이런 식으로 따로 문자열 변수 (HTMLTable) 를 만들어서 거기다 HTML 코드를 전부 집어넣고, 그걸 ('<table> ... </table>'이라는 format이 완성된 채로) 한 번에 OutputTable.innerHTML에 집어넣어서 innerHTML을 업데이트해야 문제없이 제대로 표가 출력되는구나~! ㅎㅎ (2025/11/22 17:24:49) 오오..! ㅎㅎ 흠 ㅎㅎ
+    information = count.toString() + " data found in total"; //(2025/12/31 10:27:48)
 
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "OutputTable"]); //(2025/11/22 18:06:46)
+    InformationOutput.innerHTML = information; //(2025/12/31 10:28:50)
+
+    TableOutput.innerHTML = HTMLTable; //(2025/11/22 22:01:30) (2025/12/31 10:28:00에 수정함)
+    //오케이, 이런 식으로 따로 문자열 변수 (HTMLTable) 를 만들어서 거기다 HTML 코드를 전부 집어넣고, 그걸 ('<table> ... </table>'이라는 format이 완성된 채로) 한 번에 TableOutput.innerHTML에 집어넣어서 innerHTML을 업데이트해야 문제없이 제대로 표가 출력되는구나~! ㅎㅎ (2025/11/22 17:24:49) 오오..! ㅎㅎ 흠 ㅎㅎ
+
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, "TableOutput"]); //(2025/11/22 18:06:46)
     /*
     https://chatgpt.com/c/6921343b-5d3c-8321-8418-996514172097
     오오, innerHTML을 편집할 때 추가한 $...$ 형태의 수식은 LaTeX이 적용되지 않는 현상이 있었어서, 이걸 해결할 방법을 ChatGPT (ModularDiscriminant 계정) 에 질문해 보니...
