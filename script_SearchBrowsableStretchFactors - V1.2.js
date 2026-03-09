@@ -29,9 +29,17 @@ const ShowDataWithCoronalityEqualsFalseInput = document.getElementById("Show dat
 const ShowDataWithDetMEquals1Input = document.getElementById("Show data with det(M) = 1");
 const ShowDataWithDetMEqualsNeg1Input = document.getElementById("Show data with det(M) = -1"); //(2025/11/24 7:56:04)
 
+
+const ChunkLengthInput = document.getElementById("ChunkLength"); //(2025/12/31 19:08:25)
+
 const SearchButton = document.getElementById("SearchButton");
 const InformationOutput = document.getElementById("InformationOutput"); //(2025/12/31 10:17:22)
 const TableOutput = document.getElementById("TableOutput"); //(2025/11/22 10:42:47) (2025/12/31 10:14:18에 수정함)
+
+
+
+let SearchResult; //(검색 결과를 저장하는데, HTML에서 표로 띄우는 게 바로 가능한 형태로 저장함) (2025/12/31 17:46:28)
+let ActualChunkLength; //(2025/12/31 19:08:37)
 
 
 
@@ -65,6 +73,40 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
     const ShowDataWithDetMEqualsNeg1 = ShowDataWithDetMEqualsNeg1Input.checked; //(2025/11/24 8:00:50)
 
 
+    let ChunkLength = parseInt(ChunkLengthInput.value); //(처음엔 const로 했었지만, 아래에서 'ChunkLength = Math.abs(ChunkLength);'를 하게 돼서 let으로 바꿈 (2025/12/31 20:02:56))
+
+
+
+    if(Number.isNaN(ChunkLength)) //ChunkLength가 NaN이면 더 수학적 계산을 진행할 수 없으므로 가장 먼저 if 문으로 분리해서 처리 (ActualChunkLength를 default 값으로 설정) (2025/12/31 19:28:54)
+    {
+        ActualChunkLength = 100;
+    }
+    else
+    {
+        if(ChunkLength === 0) //ChunkLength (정수) 에 0이 입력되었다면 default 값으로 처리해야 하며, 이 경우 굳이 절댓값을 계산하는 수고를 하지 않아도 되므로 미리 if 문으로 분리해서 처리 (2025/12/31 19:28:38)
+        {
+            ActualChunkLength = 100; //(2025/12/31 19:16:45)
+        }
+        else
+        {
+            ChunkLength = Math.abs(ChunkLength); //(2025/12/31 19:19:57)
+            if(ChunkLength > 100) //(여기서의 100은 default 값이 아니라, 이것보다 ChunkLength가 더 크면 랙이 걸리고 이 페이지의 메모리 사용량이 지나치게 많을 것 같아서 걱정된다..는 threshold 값임. (2025/12/31 19:30:04))
+            {
+                if(!confirm(
+                    "If " + ChunkLength.toString() + " (more than 100) data are shown at once,\n"
+                    + "· this tab may use excessive memory\n"
+                    + "· and table loading and processing math expressions may lag.\n"
+                    + "Would you like to continue?" //(2025/12/31 19:55:55)
+                ))
+                {
+                    return; //사용자가 '아니오'를 누르면, 검색 자체가 진행되지 않도록 함수 실행을 완전히 멈춰 버림 (2025/12/31 19:32:23)
+                }
+            }
+            ActualChunkLength = ChunkLength; //(2025/12/31 19:31:32)
+        }
+    }
+
+
     
     InformationOutput.innerHTML = "Loading..."; //(2025/11/22 10:50:02) (오오, 이걸 'await' 연산을 수행하는 부분보다 앞에 놓으니까, 정말로 로딩 중임을 표시하는 효과가 되는구나..! ㅎㅎ (2025/11/22 10:50:34) 오오..! ㅎㅎ 흠 ㅎㅎ) (2025/12/31 10:19:32에 수정함)
     TableOutput.innerHTML = ""; //(2025/12/31 10:20:17)
@@ -79,39 +121,21 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
 
     //전체 반복문에 관련된 변수들 (반복문 전체에 얽혀 있는 'global한' 변수들) (2025/11/22 25:45:34)
     const len1 = dataset.length;
-    let count = 0; //(2025/11/22 21:58:34)
+    //let count = 0; //(2025/11/22 21:58:34)
     let k1;
 
     //반복문의 각 턴 안에서만 관련이 있고, 사용이 되는 변수들 (반복문의 한 턴 안에서만 얽힌 'local한' 변수들) (2025/11/22 25:46:05)
     let n, matrix, phi, CyclesWOCrit, Cycle1WOCrit, nPrime, MatrixPrime, phiPrime; //(중복 계산 방지용 변수들 (2025/11/22 25:46:27))
     let len2, len3, k2, k3; //(len2, len3 역시 중복 계산 방지용 변수임 (2025/11/22 25:46:51))
 
+    let OneRowOfTable; //(2025/12/31 17:59:16)
     let HTMLTable;
 
     let information; //(2025/12/31 10:22:15)
-    
-    HTMLTable = '<table> <tr> '
-        + '<th scope="col">size $n$</th> '
-        + '<th scope="col">browsable matrix $M$</th> '
-        + '<th scope="col">$\\epsilon$</th> '
-        + '<th scope="col">permutation $\\phi$</th> '
-        + '<th scope="col">characteristic polynomial $\\chi_M(x)$</th> '
-        + '<th scope="col">factorization of characteristic polynomial $\\chi_M(x)$</th> '
-        + '<th scope="col">closed form of browsable stretch factor (leading eigenvalue) $\\lambda$</th> ' //(2025/11/22 28:31:39)
-        + '<th scope="col">numerical value of $\\lambda$</th> '
-        + '<th scope="col">minimal polynomial of $\\lambda$</th> '
-        + '<th scope="col">degree $d$ of $\\lambda$</th> '
-        + '<th scope="col">cycles of $\\phi$ without critical points</th> '
-        + '<th scope="col">minimality of $M$</th> '
-        + '<th scope="col">minimalized size $n\'$</th> '
-        + '<th scope="col">minimalized browsable matrix $M\'$</th> '
-        + '<th scope="col">minimalized permutation $\\phi\'$</th> '
-        + '<th scope="col">genus $g$</th> '
-        + '<th scope="col">coronality of $\\lambda$</th> '
-        + '<th scope="col">determinant $\\det(M)$</th> '
-    + '</tr> '; //(2025/11/22 22:40:43)
-    //문자열 안에서 그냥 '$\epsilon$'이라고 쓰면 '\'가 다음에 나온 문자인 'e'랑 붙어서 특별한 문자? 이스케이프 시퀀스? ... 인 '\e'로 인식되는..? 것 같아서 (그래서 출력은 그냥 '\'가 사라진 것처럼, $epsilon$을 출력한 결과와 동일한 결과가 나옴) , 문자열 안의 '\'를 제대로 기술하기 위해 이스케이프 시퀀스 '\\'를 사용해 줘야 올바르게 출력이 되는 것 같음... . ㅎㅎ (2025/11/22 18:09:45)
-    //즉, 조금 번거롭긴 해도, 매번 '$\epsilon$' 같이 쓰지 않고 '$\\epsilon$' 같이 써 줘야 올바르게 결과가 나오게 되는 듯..? ... ㅎㅎ (2025/11/22 18:10:13) 옹... ㅎㅎ 흠... ㅎㅎ
+
+
+
+    SearchResult = []; //(2025/12/31 18:11:28)
 
     for(k1 = 0; k1 < len1; k1++)
     {
@@ -249,62 +273,62 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
 
 
 
-        HTMLTable += "<tr> ";
+        OneRowOfTable = "<tr> "; //(HTMLTable을 전부 OneRowOfTable로 바꾸기 시작한 시각: 2025/12/31 18:07:35)
 
             n = dataset[k1][0];
-            HTMLTable += "<td>";
-                HTMLTable += n.toString(); //(2025/11/22 24:19:35)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += n.toString(); //(2025/11/22 24:19:35)
+            OneRowOfTable += "</td> ";
 
             matrix = dataset[k1][1];
-            HTMLTable += "<td>";
-                HTMLTable += "$\\begin{pmatrix} ";
-                    HTMLTable += matrix[0][0].toString();
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$\\begin{pmatrix} ";
+                    OneRowOfTable += matrix[0][0].toString();
                     for(k3 = 1; k3 < n; k3++)
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += matrix[0][k3].toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += matrix[0][k3].toString();
                     }
                     for(k2 = 1; k2 < n; k2++)
                     {
-                        HTMLTable += " \\\\ ";
-                        HTMLTable += matrix[k2][0].toString();
+                        OneRowOfTable += " \\\\ ";
+                        OneRowOfTable += matrix[k2][0].toString();
                         for(k3 = 1; k3 < n; k3++)
                         {
-                            HTMLTable += " & ";
-                            HTMLTable += matrix[k2][k3].toString(); //(CyclesWOCrit 리스트의 경우에 그 각 항목 (리스트) 을 따로 Cycle1WOCrit이라는 변수에 저장해서, 두 번째 반복문 (k3의 반복문) 안에서는 Cycle1WOCrit[k3]과 같이 간편하게 항목을 참조하듯이... 이 경우에도 matrix[k2] (리스트) (matrix의 한 row) 를 따로 하나의 변수에 저장해서, 중복 계산을 방지하는 게 조금 더 좋으..려나..? ... (... 이게 실제로 계산량, 계산 시간, ... 을 줄여 주려..나? ...) (2025/11/22 26:07:15) 오.... ㅎㅎ 흠... ㅎㅎ)
+                            OneRowOfTable += " & ";
+                            OneRowOfTable += matrix[k2][k3].toString(); //(CyclesWOCrit 리스트의 경우에 그 각 항목 (리스트) 을 따로 Cycle1WOCrit이라는 변수에 저장해서, 두 번째 반복문 (k3의 반복문) 안에서는 Cycle1WOCrit[k3]과 같이 간편하게 항목을 참조하듯이... 이 경우에도 matrix[k2] (리스트) (matrix의 한 row) 를 따로 하나의 변수에 저장해서, 중복 계산을 방지하는 게 조금 더 좋으..려나..? ... (... 이게 실제로 계산량, 계산 시간, ... 을 줄여 주려..나? ...) (2025/11/22 26:07:15) 오.... ㅎㅎ 흠... ㅎㅎ)
                         }
                     } //(2025/11/22 24:24:30)
                     //('&'와 '\\'가 redundant하지 않고 정확한 개수만큼 들어가게 하고 싶은데, if 문을 써서 굳이 계산량을 늘리고 싶지는 않고, 그러면서 'n - 1'이라는 값을 계속해서 중복 계산하고 싶지도 않아서 (...) , 이렇게 각 반복문에서 가장 첫 번째 턴을 분리해 내는 방식으로 코드를 짤 수밖에 없었음 (이게 최선의 코드였음) ... . ㅎㅎ (2025/11/22 24:25:56) 흠... ㅎㅎ)
-                HTMLTable += " \\end{pmatrix}$";
-            HTMLTable += "</td> ";
+                OneRowOfTable += " \\end{pmatrix}$";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += dataset[k1][2].toString(); //(2025/11/22 24:19:43)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += dataset[k1][2].toString(); //(2025/11/22 24:19:43)
+            OneRowOfTable += "</td> ";
 
             phi = dataset[k1][3];
-            HTMLTable += "<td>";
-                HTMLTable += "$\\begin{pmatrix} ";
-                    //HTMLTable += (0).toString();
-                    HTMLTable += "0"; //(2025/11/22 25:30:39)
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$\\begin{pmatrix} ";
+                    //OneRowOfTable += (0).toString();
+                    OneRowOfTable += "0"; //(2025/11/22 25:30:39)
                     for(k3 = 1; k3 <= n; k3++)
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += k3.toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += k3.toString();
                     }
-                    HTMLTable += " \\\\ ";
-                    HTMLTable += phi[0].toString();
+                    OneRowOfTable += " \\\\ ";
+                    OneRowOfTable += phi[0].toString();
                     for(k3 = 1; k3 <= n; k3++) //위에서 browsable matrix를 출력하는 코드를 작성할 때와 analogous하게 프로그래밍하기 위해, 몇 번째 column인지를 결정하는 dummy variable로 (k2가 아니라) k3를 사용함. ㅎㅎ (2025/11/22 25:31:53) 흠 ㅎㅎ
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += phi[k3].toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += phi[k3].toString();
                     }
-                HTMLTable += " \\end{pmatrix}$";
-            HTMLTable += "</td> ";
+                OneRowOfTable += " \\end{pmatrix}$";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += "$" + dataset[k1][4].replace(/\*/g, "") + "$";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$" + dataset[k1][4].replace(/\*/g, "") + "$";
                 /*
                 참고: dataset[k1][4]라는, (울프람 랭귀지에서 사용 가능한) (string 형태의) 수식을 LaTeX 문법에 맞게 바꾸기 위해, 가장 먼저 곱하기 연산 '*'를 제거해야 함... . ㅎㅎ (2025/11/22 23:19:03)
                 ... 근데, 그냥 'dataset[k1][4].replace("*", "")'라고만 하면, 이건 dataset[k1][4]에서 찾을 수 있는 가장 첫 번째 '*'만을 제거 (empty string으로 치환) 해 줌. ㅎㅎ (2025/11/22 23:15:00)
@@ -315,159 +339,184 @@ SearchButton.addEventListener("click", async function () { //(2025/11/22 10:46:5
                 (2025/11/22 23:20:57) 오오..! ㅎㅎ 흠 ㅎㅎ
                 */
                 //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (2025/11/22 23:05:52)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += "$" + dataset[k1][5].replace(/\*/g, "") + "$"; //(2025/11/22 23:04:22)
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$" + dataset[k1][5].replace(/\*/g, "") + "$"; //(2025/11/22 23:04:22)
                 //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (2025/11/22 23:06:00)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
+            OneRowOfTable += "<td>";
                 if(dataset[k1][6].slice(0, 4) !== "Root") //dataset[k1][6] 안에 저장된 게, 울프람 랭귀지에서만 유용하게 사용될 수 있는 (?) Root[...] 꼴의 문자열 (울프람 랭귀지의 Root 오브젝트? ㅎㅎ) 이 아닌 경우에만 (즉, 뭔가 λ 값을 닫힌 식으로 정리할 수 있는 등, 출력된 결과를 유용하게 활용할 수 있는 경우에만) dataset[k1][6]에 저장된 문자열을 출력하라는 뜻... . ㅎㅎ (2025/11/22 26:37:52) 오... ㅎㅎ 흠 ㅎㅎ
                 {
-                    HTMLTable += dataset[k1][6];
+                    OneRowOfTable += dataset[k1][6];
                 }
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += dataset[k1][7].toString(); //(2025/11/22 29:04:54)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += dataset[k1][7].toString(); //(2025/11/22 29:04:54)
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += "$" + dataset[k1][8].replace(/\*/g, "") + "$"; //(2025/11/22 23:05:10)
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$" + dataset[k1][8].replace(/\*/g, "") + "$"; //(2025/11/22 23:05:10)
                 //아직 지수에 두 자리 수 이상의 자연수가 있으면 수식이 어색해지는 문제를 고쳐야 함 (2025/11/22 23:06:03)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += dataset[k1][9].toString(); //(2025/11/22 24:19:48)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += dataset[k1][9].toString(); //(2025/11/22 24:19:48)
+            OneRowOfTable += "</td> ";
 
             CyclesWOCrit = dataset[k1][10];
-            HTMLTable += "<td>";
+            OneRowOfTable += "<td>";
                 len2 = CyclesWOCrit.length;
-                HTMLTable += "{";
-                //HTMLTable += "$\\{"; //CyclesWOCrit를 출력할 때에는, 굳이 LaTeX으로 출력할 필요 없을 것 같아서, 굳이 웹페이지 로딩 시에 MathJax가 할 일을 (그리고 로딩 시간을) 늘리지 않아도 될 것 같아서... CyclesWOCrit을 출력할 시에는 딱히 LaTeX을 쓰지 않고, 그냥 문자열 형태로 출력하기로 결정함... . ㅎㅎ (2025/11/22 26:13:49) 흠... ㅎㅎ
+                OneRowOfTable += "{";
+                //OneRowOfTable += "$\\{"; //CyclesWOCrit를 출력할 때에는, 굳이 LaTeX으로 출력할 필요 없을 것 같아서, 굳이 웹페이지 로딩 시에 MathJax가 할 일을 (그리고 로딩 시간을) 늘리지 않아도 될 것 같아서... CyclesWOCrit을 출력할 시에는 딱히 LaTeX을 쓰지 않고, 그냥 문자열 형태로 출력하기로 결정함... . ㅎㅎ (2025/11/22 26:13:49) 흠... ㅎㅎ
                 for(k2 = 0; k2 < len2; k2++)
                 {
                     if(k2 !== 0) //이 k2의 반복문은, 한 턴이 좀 복잡하게 생긴 것 같아서 그냥 이렇게 if 문을 써서 (살짝 계산량이 증가하더라도) 코드 가독성을 지나치게 떨어뜨리지 않는 편이 낫다고 판단함... . ㅎㅎ (2025/11/22 25:59:23) 흠... ㅎㅎ
                     //또한 이렇게 if 문으로, 반복문에서 k2 = 0인 경우만 제외하고 쉼표를 찍는 식으로 코딩을 하면, (k2가 0부터 시작해도 돼서, len2가 1 이상일 필요가 없으므로) 반복문을 시작하기 전에 len2가 0인 경우를 따로 분리하는 예외 처리를 하지 않아도 된다는 이점이 있음. ㅎㅎ (2025/11/22 26:02:56) 흠 ㅎㅎ
                     {
-                        HTMLTable += ", ";
+                        OneRowOfTable += ", ";
                     }
 
                     Cycle1WOCrit = CyclesWOCrit[k2];
                     len3 = Cycle1WOCrit.length;
 
-                    HTMLTable += "(";
-                    HTMLTable += Cycle1WOCrit[0].toString();
+                    OneRowOfTable += "(";
+                    OneRowOfTable += Cycle1WOCrit[0].toString();
                     for(k3 = 1; k3 < len3; k3++)
                     {
-                        HTMLTable += " "; //순환치환을 나타내는 통상적인 표기법대로, (덜 순서쌍처럼 보이게 하기 위해..? ... ㅎㅎ) 하나의 순환치환 안에서는 (쉼표를 없애고) 그냥 띄어쓰기로 수들을 구분하기로 함... . ㅎㅎ (2025/11/22 26:21:04) 흠... ㅎㅎ
-                        //HTMLTable += ", ";
-                        HTMLTable += Cycle1WOCrit[k3].toString();
+                        OneRowOfTable += " "; //순환치환을 나타내는 통상적인 표기법대로, (덜 순서쌍처럼 보이게 하기 위해..? ... ㅎㅎ) 하나의 순환치환 안에서는 (쉼표를 없애고) 그냥 띄어쓰기로 수들을 구분하기로 함... . ㅎㅎ (2025/11/22 26:21:04) 흠... ㅎㅎ
+                        //OneRowOfTable += ", ";
+                        OneRowOfTable += Cycle1WOCrit[k3].toString();
                     }
-                    HTMLTable += ")";
+                    OneRowOfTable += ")";
                 }
-                HTMLTable += "}";
-                //HTMLTable += "\\}$";
-            HTMLTable += "</td> ";
+                OneRowOfTable += "}";
+                //OneRowOfTable += "\\}$";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                //HTMLTable += dataset[k1][11];
+            OneRowOfTable += "<td>";
+                //OneRowOfTable += dataset[k1][11];
                 if(dataset[k1][11])
                 {
-                    //HTMLTable += "T";
-                    HTMLTable += "O";
-                    //HTMLTable += "○";
+                    //OneRowOfTable += "T";
+                    OneRowOfTable += "O";
+                    //OneRowOfTable += "○";
                     //true / false를 어떤 식으로 출력해야 표 상에서 가장 가독성이 좋을지 고민하다가, (ASCII code 안에서 해결되므로, 특수문자가 깨질 걱정 같은 걸 하지 않아도 되기도 하고, ...) 가장 가독성이 괜찮아 보이는 (대문자) 알파벳 'O'와 'X'를 사용하기로 함... . ... ㅎㅎ (2025/11/22 27:00:27) 흠... ㅎㅎ
                 }
                 else
                 {
-                    //HTMLTable += "F";
-                    HTMLTable += "X";
-                    //HTMLTable += "×";
+                    //OneRowOfTable += "F";
+                    OneRowOfTable += "X";
+                    //OneRowOfTable += "×";
                 }
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
             nPrime = dataset[k1][12];
-            HTMLTable += "<td>";
-                HTMLTable += nPrime.toString(); //(2025/11/22 24:36:57)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += nPrime.toString(); //(2025/11/22 24:36:57)
+            OneRowOfTable += "</td> ";
 
             MatrixPrime = dataset[k1][13]; //(2025/11/22 24:37:12)
-            HTMLTable += "<td>";
-                HTMLTable += "$\\begin{pmatrix} ";
-                    HTMLTable += MatrixPrime[0][0].toString();
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$\\begin{pmatrix} ";
+                    OneRowOfTable += MatrixPrime[0][0].toString();
                     for(k3 = 1; k3 < nPrime; k3++)
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += MatrixPrime[0][k3].toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += MatrixPrime[0][k3].toString();
                     }
                     for(k2 = 1; k2 < nPrime; k2++)
                     {
-                        HTMLTable += " \\\\ ";
-                        HTMLTable += MatrixPrime[k2][0].toString();
+                        OneRowOfTable += " \\\\ ";
+                        OneRowOfTable += MatrixPrime[k2][0].toString();
                         for(k3 = 1; k3 < nPrime; k3++)
                         {
-                            HTMLTable += " & ";
-                            HTMLTable += MatrixPrime[k2][k3].toString();
+                            OneRowOfTable += " & ";
+                            OneRowOfTable += MatrixPrime[k2][k3].toString();
                         }
                     } //(2025/11/22 24:38:50)
-                HTMLTable += " \\end{pmatrix}$";
-            HTMLTable += "</td> ";
+                OneRowOfTable += " \\end{pmatrix}$";
+            OneRowOfTable += "</td> ";
 
             phiPrime = dataset[k1][14];
-            HTMLTable += "<td>";
-                HTMLTable += "$\\begin{pmatrix} ";
-                    //HTMLTable += (0).toString();
-                    HTMLTable += "0"; //(2025/11/22 25:30:39)
+            OneRowOfTable += "<td>";
+                OneRowOfTable += "$\\begin{pmatrix} ";
+                    //OneRowOfTable += (0).toString();
+                    OneRowOfTable += "0"; //(2025/11/22 25:30:39)
                     for(k3 = 1; k3 <= nPrime; k3++)
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += k3.toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += k3.toString();
                     }
-                    HTMLTable += " \\\\ ";
-                    HTMLTable += phiPrime[0].toString();
+                    OneRowOfTable += " \\\\ ";
+                    OneRowOfTable += phiPrime[0].toString();
                     for(k3 = 1; k3 <= nPrime; k3++)
                     {
-                        HTMLTable += " & ";
-                        HTMLTable += phiPrime[k3].toString();
+                        OneRowOfTable += " & ";
+                        OneRowOfTable += phiPrime[k3].toString();
                     }
-                HTMLTable += " \\end{pmatrix}$";
-            HTMLTable += "</td> ";
+                OneRowOfTable += " \\end{pmatrix}$";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += dataset[k1][15].toString(); //(2025/11/22 24:19:55)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += dataset[k1][15].toString(); //(2025/11/22 24:19:55)
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                //HTMLTable += dataset[k1][16];
+            OneRowOfTable += "<td>";
+                //OneRowOfTable += dataset[k1][16];
                 if(dataset[k1][16]) //(2025/11/22 27:02:04)
                 {
-                    //HTMLTable += "T";
-                    HTMLTable += "O";
-                    //HTMLTable += "○";
+                    //OneRowOfTable += "T";
+                    OneRowOfTable += "O";
+                    //OneRowOfTable += "○";
                 }
                 else
                 {
-                    //HTMLTable += "F";
-                    HTMLTable += "X";
-                    //HTMLTable += "×";
+                    //OneRowOfTable += "F";
+                    OneRowOfTable += "X";
+                    //OneRowOfTable += "×";
                 }
-            HTMLTable += "</td> ";
+            OneRowOfTable += "</td> ";
 
-            HTMLTable += "<td>";
-                HTMLTable += dataset[k1][17].toString(); //(2025/11/22 24:19:58)
-            HTMLTable += "</td> ";
+            OneRowOfTable += "<td>";
+                OneRowOfTable += dataset[k1][17].toString(); //(2025/11/22 24:19:58)
+            OneRowOfTable += "</td> ";
         
-        HTMLTable += "</tr> ";
+        OneRowOfTable += "</tr> ";
 
-        count++;
+        SearchResult[k1] = OneRowOfTable; //(2025/12/31 18:12:50)
     }
+
+    
+
+    HTMLTable = '<table> <tr> '
+        + '<th scope="col">size $n$</th> '
+        + '<th scope="col">browsable matrix $M$</th> '
+        + '<th scope="col">$\\epsilon$</th> '
+        + '<th scope="col">permutation $\\phi$</th> '
+        + '<th scope="col">characteristic polynomial $\\chi_M(x)$</th> '
+        + '<th scope="col">factorization of characteristic polynomial $\\chi_M(x)$</th> '
+        + '<th scope="col">closed form of browsable stretch factor (leading eigenvalue) $\\lambda$</th> ' //(2025/11/22 28:31:39)
+        + '<th scope="col">numerical value of $\\lambda$</th> '
+        + '<th scope="col">minimal polynomial of $\\lambda$</th> '
+        + '<th scope="col">degree $d$ of $\\lambda$</th> '
+        + '<th scope="col">cycles of $\\phi$ without critical points</th> '
+        + '<th scope="col">minimality of $M$</th> '
+        + '<th scope="col">minimalized size $n\'$</th> '
+        + '<th scope="col">minimalized browsable matrix $M\'$</th> '
+        + '<th scope="col">minimalized permutation $\\phi\'$</th> '
+        + '<th scope="col">genus $g$</th> '
+        + '<th scope="col">coronality of $\\lambda$</th> '
+        + '<th scope="col">determinant $\\det(M)$</th> '
+    + '</tr> '; //(2025/11/22 22:40:43)
+    //문자열 안에서 그냥 '$\epsilon$'이라고 쓰면 '\'가 다음에 나온 문자인 'e'랑 붙어서 특별한 문자? 이스케이프 시퀀스? ... 인 '\e'로 인식되는..? 것 같아서 (그래서 출력은 그냥 '\'가 사라진 것처럼, $epsilon$을 출력한 결과와 동일한 결과가 나옴) , 문자열 안의 '\'를 제대로 기술하기 위해 이스케이프 시퀀스 '\\'를 사용해 줘야 올바르게 출력이 되는 것 같음... . ㅎㅎ (2025/11/22 18:09:45)
+    //즉, 조금 번거롭긴 해도, 매번 '$\epsilon$' 같이 쓰지 않고 '$\\epsilon$' 같이 써 줘야 올바르게 결과가 나오게 되는 듯..? ... ㅎㅎ (2025/11/22 18:10:13) 옹... ㅎㅎ 흠... ㅎㅎ
 
     HTMLTable += "</table>";
 
-    information = count.toString() + " data found in total"; //(2025/12/31 10:27:48)
+    //information = count.toString() + " data found in total"; //(2025/12/31 10:27:48)
 
     InformationOutput.innerHTML = information; //(2025/12/31 10:28:50)
 

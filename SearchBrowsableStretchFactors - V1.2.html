@@ -106,9 +106,24 @@
     <input type="checkbox" id="Show data with det(M) = 1" checked></input> <br><br>
 
     <label for="Show data with det(M) = -1">Show data with determinant $\det(M) = -1$</label>
-    <input type="checkbox" id="Show data with det(M) = -1" checked></input> <br><br>
+    <input type="checkbox" id="Show data with det(M) = -1" checked></input> <br><br><br>
 
     <!--(2025/11/24 7:51:46)-->
+
+    <label for="ChunkLength">Show <input type="number" id="ChunkLength" style="width: 50px;"></input> data at once</label> <br><br>
+    <!--(ChunkLength 대신 ChunkSize, ... 도 가능할 듯) (2025/12/31 18:40:11)-->
+    <!--
+    ... 음, 왜인지 모르겠지만... 그냥
+    <input type="number" id="something"></input>
+    과 같이 적어서 수 입력란을 만들었을 경우, 기본 width는 (VS Code에서 미리보기로 웹페이지를 확인했을 때 기준으로) 162.5px 정도 되는 듯...? (162px는 사알짝 짧고, 163px는 사알짝 긴 것 같음....)
+    ... 왜 width가 그런 애매한 값인 거지... ㄷㄷㄷㄷ
+    (2025/12/31 18:53:52)
+    오.... ㅎㅎ 흠 ㅎㅎ
+
+    ... 일단 입력란 길이는, (어차피 청크 길이는 너무 길면 랙도 걸리고 수식 로딩도 느리고 웹페이지가 메모리도 엄청 많이 사용할 거라서 안 좋아서, 커 봐야 수백 정도가 적합한 값일 것이기 때문에...) 그렇게 길 필요가 없으니, width: 50px로 잡아 볼게... . ㅎㅎ
+    (2025/12/31 18:59:11)
+    오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
 
     <button id="SearchButton">Search</button> <br><br>
 
