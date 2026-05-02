@@ -36,43 +36,43 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
     //편의상, 가독성을 위해 실제 HTML에서 적을 때와 똑같이 들여쓰기를 해서 적음... . ㅎㅎ (2026/5/2 26:24:39) 흠... ㅎㅎ
     WrapperList[k1].innerHTML = '<h2>Proof.</h2> '
         + '<div class="ArgumentBox"> '
-            + '<div class="box2" style="grid-area: CurrentPage"> '
+            + '<div class="CurrentPage"> '
                 + 'Current Page: 1/' + ProofLenList[k1].toString()
             + '</div> '
 
-            + '<div class="box2" style="grid-area: GoToPage"> '
+            + '<div class="GoToPage"> '
                 + '<label for="PageNum">Go to Page</label> &nbsp; '
                 + '<input type="number" id="PageNum" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp; '
                 + '<button onclick="ChangePage()" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button> '
             + '</div> '
 
-            + '<button class="ButtonBox" style="grid-area: PrevButton" onclick="PrevPage()"> '
+            + '<button class="PrevButton" onclick="PrevPage()"> '
                 + '← Previous '
             + '</button> '
 
-            + '<button class="ButtonBox" style="grid-area: NextButton" onclick="NextPage()"> '
+            + '<button class="NextButton" onclick="NextPage()"> '
                 + 'Next → '
             + '</button> '
 
-            + '<div class="box1" style="grid-area: StatusAndGoal"> '
+            + '<div class="StatusAndGoal"> '
                 + ProofList[k1][0][0]
             + '</div> '
 
-            + '<div class="box1" style="grid-area: ExampleStatusAndGoal"> '
+            + '<div class="ExampleStatusAndGoal"> '
                 + ProofList[k1][0][1]
             + '</div> '
 
-            + '<div class="box1" style="grid-area: Argument"> '
+            + '<div class="Argument"> '
                 + ProofList[k1][0][2]
             + '</div> '
 
-            + '<div class="box1" style="grid-area: ExampleArgument"> '
+            + '<div class="ExampleArgument"> '
                 + ProofList[k1][0][3]
             + '</div> '
         + '</div> '
 
         + '<br> '
-        + '<div class="RecallBox"></div> '; //(2026/5/2 26:31:15)
+        + '<div class="RecallBox"></div> '; //(2026/5/2 26:31:15) (클래스명을 전부 각 칸의 명칭에 맞춰 수정한 시각: 2026/5/2 26:51:05)
 }
 
 

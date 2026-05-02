@@ -18,14 +18,12 @@
     border: solid 1px black;
 }
 
-.box1
-{
-    padding: 10px;
-    border: solid 1px black;
-}
 
-.box2
+
+.CurrentPage
 {
+    grid-area: CurrentPage;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,13 +33,73 @@
     font-size: 20px;
 }
 
-.ButtonBox
+.GoToPage
 {
+    grid-area: GoToPage;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: solid 1px black;
+
+    font-size: 20px;
+}
+
+.PrevButton
+{
+    grid-area: PrevButton;
+
     border: solid 1px black;
     background-color: #dfdfdf;
 
     font-size: 20px;
 
     cursor: pointer;
-    /*(2026/5/2 20:42:14)*/
 }
+
+.NextButton
+{
+    grid-area: NextButton;
+
+    border: solid 1px black;
+    background-color: #dfdfdf;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.StatusAndGoal
+{
+    grid-area: StatusAndGoal;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.ExampleStatusAndGoal
+{
+    grid-area: ExampleStatusAndGoal;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.Argument
+{
+    grid-area: Argument;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.ExampleArgument
+{
+    grid-area: ExampleArgument;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+/*(2026/5/2 26:51:42)*/
