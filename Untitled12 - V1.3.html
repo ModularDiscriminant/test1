@@ -28,43 +28,52 @@
     <h1>Untitled12 - V1.3</h1>
 
     <div class="proof">
-        <div class="box2" style="grid-area: CurrentPage">
-            Current Page: 1/100
-        </div>
+        <!--<b style="font-size: 24px">Proof.</b> <br><br>-->
+        <h2>Proof.</h2> <!--(2026/5/2 22:32:11)-->
 
-        <div class="box2" style="grid-area: GoToPage">
-            <label for="PageNum">Go to Page</label> &nbsp;
-            <input type="number" id="PageNum" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button onclick="ChangePage()">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
+        <div class="ArgumentBox">
+            <div class="box2" style="grid-area: CurrentPage">
+                Current Page: 1/100
+            </div>
+
+            <div class="box2" style="grid-area: GoToPage">
+                <label for="PageNum">Go to Page</label> &nbsp;
+                <input type="number" id="PageNum" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button onclick="ChangePage()" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button> <!--'style="cursor: pointer"'는 Untitled12 - V1.3에서 추가함 (2026/5/2 22:35:24)-->
+            </div>
+            <!--(2026/5/2 20:56:13)-->
+            
+            <button class="ButtonBox" style="grid-area: PrevButton" onclick="PrevPage()">
+                ← Previous
+            </button>
+            
+            <button class="ButtonBox" style="grid-area: NextButton" onclick="NextPage()">
+                Next →
+            </button>
+            <!--(2026/5/2 20:40:13)-->
+            
+            <div class="box1" style="grid-area: StatusAndGoal">
+                E
+            </div>
+            
+            <div class="box1" style="grid-area: ExampleStatusAndGoal">
+                F
+            </div>
+            
+            <div class="box1" style="grid-area: Argument">
+                G
+            </div>
+            
+            <div class="box1" style="grid-area: ExampleArgument">
+                H
+            </div>
         </div>
-        <!--(2026/5/2 20:56:13)-->
-        
-        <button class="ButtonBox" style="grid-area: PrevButton" onclick="PrevPage()">
-            ← Previous
-        </button>
-        
-        <button class="ButtonBox" style="grid-area: NextButton" onclick="NextPage()">
-            Next →
-        </button>
-        <!--(2026/5/2 20:40:13)-->
-        
-        <div class="box1" style="grid-area: StatusAndGoal">
-            E
-        </div>
-        
-        <div class="box1" style="grid-area: ExampleStatusAndGoal">
-            F
-        </div>
-        
-        <div class="box1" style="grid-area: Argument">
-            G
-        </div>
-        
-        <div class="box1" style="grid-area: ExampleArgument">
-            H
-        </div>
+        <!--(2026/5/2 19:47:58)-->
+
+        <br>
+
+        <div class="RecallBox"></div>
     </div>
-    <!--(2026/5/2 19:47:58)-->
     
     
     
