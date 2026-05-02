@@ -60,11 +60,11 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
             + '</div> '
 
             + '<div class="ExampleStatusAndGoal"> '
-                + ProofList[k1][0][1]
+                + ProofList[k1][0][2] //(2026/5/2 29:46:26)
             + '</div> '
 
             + '<div class="Argument"> '
-                + ProofList[k1][0][2]
+                + ProofList[k1][0][1] //(2026/5/2 29:46:33)
             + '</div> '
 
             + '<div class="ExampleArgument"> '
@@ -115,8 +115,8 @@ function GoToGivenPage(ProofIndex, PageNum) //ProofIndex는 proof의 번호 (ind
     
              CurrentPageElementList[ProofIndex].innerHTML = "Current Page: " + PageNum.toString() + "/" + ProofLenList[ProofIndex].toString(); //(2026/5/2 28:23:14)
            StatusAndGoalElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][0];
-    ExampleStatusAndGoalElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][1];
-                ArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][2];
+    ExampleStatusAndGoalElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][2]; //(2026/5/2 29:47:24)
+                ArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][1]; //(2026/5/2 29:47:31)
          ExampleArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][3];
     //(2026/5/2 28:25:00)
 
