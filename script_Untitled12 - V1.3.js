@@ -119,8 +119,20 @@ function GoToGivenPage(ProofIndex, PageNum) //ProofIndex는 proof의 번호 (ind
                 ArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][2];
          ExampleArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][3];
     //(2026/5/2 28:25:00)
+
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, WrapperList[ProofIndex]]); //(2026/5/2 29:09:57)
+    /*
+    오오, 전에 찾아본 (그리고 ChatGPT에게 물어봐서 해결한) 바와 같이 이러한 재렌더링이 필요하다는 사실은 알고 있었는데, 전에는 재렌더링하길 원하는 element의 ID를 알고 있을 때
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, (수식을 추가한 요소의 id를 문자열로 입력)]);
+    과 같이 입력하는 방법만을 알고 있었음... . ㅎㅎ
+    근데, 지금은 WrapperList[ProofIndex]의 id라는 게 없고 그냥 그 element 자체(의 주솟값)만 갖고 있는 상황이라서, ChatGPT에게 다시 물어보니
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, (수식을 추가한 요소 자체(의 주솟값))]);
+    과 같이 입력해도 똑같이 재렌더링을 할 수 있다고 알려줌... . ㅎㅎ
+    그래서 이번에도 코드 한 줄 추가로 간편하게 재렌더링에 성공함..!! ㅎㅎ
+    오오, 편리하넹..!! ㅎㅎ (2026/5/2 29:14:06) 오오..!! ㅎㅎ 흠 ㅎㅎ
+    */
 }
-//(2026/5/2 28:40:02)
+//(2026/5/2 29:14:12)
 
 function ChangePage(ProofIndex)
 {
