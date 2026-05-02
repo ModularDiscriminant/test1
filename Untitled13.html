@@ -29,20 +29,24 @@
 
     <div class="proof">
         <div class="box2" style="grid-area: CurrentPage">
-            A
+            Current Page: 1/100
         </div>
 
         <div class="box2" style="grid-area: GoToPage">
-            B
+            <label for="PageNum">Go to Page</label> &nbsp;
+            <input type="number" id="PageNum" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
+            <button onclick="ChangePage()">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
         </div>
+        <!--(2026/5/2 20:56:13)-->
         
-        <div class="box2" style="grid-area: PrevButton">
-            C
-        </div>
+        <button class="ButtonBox" style="grid-area: PrevButton" onclick="PrevPage()">
+            ← Previous
+        </button>
         
-        <div class="box2" style="grid-area: NextButton">
-            D
-        </div>
+        <button class="ButtonBox" style="grid-area: NextButton" onclick="NextPage()">
+            Next →
+        </button>
+        <!--(2026/5/2 20:40:13)-->
         
         <div class="box1" style="grid-area: StatusAndGoal">
             E
