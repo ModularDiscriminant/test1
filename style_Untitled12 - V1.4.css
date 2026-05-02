@@ -1,0 +1,105 @@
+/*2026/5/2*/
+
+
+
+.ArgumentBox
+{
+    display: grid;
+
+    grid-template:
+        "  CurrentPage             GoToPage" 50px
+        "   PrevButton           NextButton" 50px
+        "StatusAndGoal ExampleStatusAndGoal" minmax(100px, auto)
+        "     Argument      ExampleArgument" minmax(100px, auto)
+        /          1fr                  1fr;
+
+    gap: 0;
+    padding: 0;
+    border: solid 1px black;
+}
+
+
+
+.CurrentPage
+{
+    grid-area: CurrentPage;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: solid 1px black;
+
+    font-size: 20px;
+}
+
+.GoToPage
+{
+    grid-area: GoToPage;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: solid 1px black;
+
+    font-size: 20px;
+}
+
+.PrevButton
+{
+    grid-area: PrevButton;
+
+    border: solid 1px black;
+    background-color: #dfdfdf;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.NextButton
+{
+    grid-area: NextButton;
+
+    border: solid 1px black;
+    background-color: #dfdfdf;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.StatusAndGoal
+{
+    grid-area: StatusAndGoal;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.ExampleStatusAndGoal
+{
+    grid-area: ExampleStatusAndGoal;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.Argument
+{
+    grid-area: Argument;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.ExampleArgument
+{
+    grid-area: ExampleArgument;
+
+    padding: 10px;
+    border: solid 1px black;
+}
+
+/*(2026/5/2 26:51:42)*/
