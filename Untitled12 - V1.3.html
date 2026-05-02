@@ -1,0 +1,77 @@
+<!--2026/5/2-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled12 - V1.3</title>
+
+    <link href="style_Untitled12 - V1.3.css" rel="stylesheet" type="text/css">
+    <!--"style.css" 자리에, 적절한 원하는 css 파일의 이름을 삽입할 것 (2025/8/19 25:29:43)-->
+
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    <!--
+    https://m.blog.naver.com/mathesis_time/222108156490
+    이 글에서 가져옴~! ㅎㅎ (2025/8/17 19:38:20) 오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
+</head>
+<body>
+    <h1>Untitled12 - V1.3</h1>
+
+    <div class="proof">
+        <div class="box2" style="grid-area: CurrentPage">
+            Current Page: 1/100
+        </div>
+
+        <div class="box2" style="grid-area: GoToPage">
+            <label for="PageNum">Go to Page</label> &nbsp;
+            <input type="number" id="PageNum" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
+            <button onclick="ChangePage()">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
+        </div>
+        <!--(2026/5/2 20:56:13)-->
+        
+        <button class="ButtonBox" style="grid-area: PrevButton" onclick="PrevPage()">
+            ← Previous
+        </button>
+        
+        <button class="ButtonBox" style="grid-area: NextButton" onclick="NextPage()">
+            Next →
+        </button>
+        <!--(2026/5/2 20:40:13)-->
+        
+        <div class="box1" style="grid-area: StatusAndGoal">
+            E
+        </div>
+        
+        <div class="box1" style="grid-area: ExampleStatusAndGoal">
+            F
+        </div>
+        
+        <div class="box1" style="grid-area: Argument">
+            G
+        </div>
+        
+        <div class="box1" style="grid-area: ExampleArgument">
+            H
+        </div>
+    </div>
+    <!--(2026/5/2 19:47:58)-->
+    
+    
+    
+    <br><br><br><br><br><br>
+    <a href="index.html">Go Back</a>
+    
+    <script src="script_Untitled12 - V1.3.js"></script>
+    <!--"script.js" 자리에, 적절한 원하는 js (자바스크립트) 파일의 이름을 삽입할 것 (2025/10/12 23:07:47)-->
+</body>
+</html>
