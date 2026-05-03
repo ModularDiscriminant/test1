@@ -1,4 +1,94 @@
-//2026/5/2
+//2026/5/3
+
+
+
+//const ReferenceElementList = document.getElementsByClassName("def thm lem cor prp"); //(각각 definition, theorem, lemma, corollary, proposition을 의미함 (2026/5/3 16:36:20))
+//정의, 정리, figure (?) , ... 등 추후 참조할 만한 것들은 모두 'reference'라는 이름으로 묶어서 부른다. ㅎㅎ (2026/5/3 16:38:26) 흠 ㅎㅎ
+
+//알고 보니, 'document.getElementsByClassName("def thm lem cor prp")'를 하면 (def, thm, lem, cor, prp 중 하나라도 클래스로 갖고 있는 element를 모두 모아 주는 게 아니라) def, thm, lem, cor, prp를 모두 클래스로 갖고 있는 element들만 (!) 모아 주는 거였음... . ㅎㅎ (2026/5/3 17:55:59)
+//-> (ChatGPT에게 물어보고 답변을 받은 후) 아래와 같이 코드를 수정함... . ㅎㅎ (2026/5/3 17:56:16)
+const ReferenceElementList = Array.from(document.querySelectorAll(".def, .thm, .lem, .cor, .prp")); //(2026/5/3 17:58:36)
+/*
+참고:
+https://developer.mozilla.org/ko/docs/Web/API/Document/querySelectorAll
+을 보면, querySelectorAll은 NodeList라는 걸 반환하며,
+https://developer.mozilla.org/ko/docs/Web/API/NodeList
+를 보면 그걸 array로 바꾸려면 Array.from()을 사용할 수 있다고 함... . ㅎㅎ
+(또한, 그냥 forEach()를 사용해서 NodeList 전체에 대해서 선회하는 반복문을 돌릴 수도 있다고 함... . ㅎㅎ)
+(+ ChatGPT의 답변에 따르면, nodelist라는 NodeList 객체? ... 가 주어졌을 때, '[...nodelist]' 같이 적으면 그것도 아마 nodelist를 array로 변환한 게 되는 듯..? ... ㅎㅎ (2026/5/3 18:01:55) 흠... ㅎㅎ)
+(2026/5/3 18:02:02) 오오..! ㅎㅎ 흠... ㅎㅎ
+*/
+
+const NumOfRefs = ReferenceElementList.length; //('reference'를 줄여서 그냥 'ref'라고 (그리고 'references'를 줄여서 그냥 'refs'라고) 적음... . ㅎㅎ (2026/5/3 16:39:59) 흠... ㅎㅎ)
+const ReferenceIdList = new Array(NumOfRefs); //(... 굳이 이런 array를 만들 필요는 없..나? ... ㅋㅋㅋㅋ (2026/5/3 16:42:52) 흠... ㅎㅎ (... RegexEscapedReferenceIdList를 만들고부터는, 진짜로 필요 없을 수도..? ... ㅎㅎ (2026/5/3 17:25:23) 흠... ㅎㅎ) (... 나중에 모든 definition과 theorem, ... 을 모아서 보여주는 기능도 만들고, ... 해야 되나..? ... ㅎㅎ (2026/5/3 17:27:45) 흠... ㅎㅎ))
+
+
+
+function FullNameOfClassForRefs(ClassName)
+/*
+"def", "thm" 같은, (reference가 가질 수 있는) 클래스 명칭을 입력하면 그에 대응하는 full name ("Definition", "Theorem" 등) 을 반환하는 함수.
+(실제로 웹 페이지에서 "Definition. ...", "Theorem. ..."과 같이 출력할 때 사용할 것이기 때문에, 대문자로 시작하도록 적는다.)
+(2026/5/3 16:49:56) 흠 ㅎㅎ
+*/
+{
+    switch(ClassName)
+    {
+        case "def":
+            return "Definition";
+        case "thm":
+            return "Theorem";
+        case "lem":
+            return "Lemma";
+        case "cor":
+            return "Corollary";
+        case "prp":
+            return "Proposition";
+        default:
+            return null; //(2026/5/3 16:55:25)
+    }
+}
+//(2026/5/3 16:55:28)
+
+
+
+let ref; //(중복 계산 방지용 변수이기도 하고, 코드의 가독성을 위한 것도 있음 (2026/5/3 17:13:55))
+let k3;
+
+for(k3 = 0; k3 < NumOfRefs; k3++)
+{
+    ref = ReferenceElementList[k3]; //(중복 계산 방지용 / 가독성용 변수 (2026/5/3 17:14:24))
+
+    ReferenceIdList[k3] = ref.id; //(2026/5/3 16:43:09) (2026/5/3 17:14:35에 수정함)
+
+    ref.innerHTML = '<span style="font-size: 20px"><b>' + FullNameOfClassForRefs(ref.className) + '.</b> (' + ref.id + ')</span> <br><br> ' + ref.innerHTML; //(ref.id를 쓸지 ReferenceIdList[k3]를 쓸지 (뭐가 더 빠를지, ...) 고민했는데, 일단 그냥 ref.id를 씀 (2026/5/3 17:16:54)) (2026/5/3 18:03:49에 '<br>'을 '<br><br>'로 바꿈)
+}
+//(2026/5/3 17:17:19)
+
+
+
+
+//------------------------------------------------ (2026/5/3 16:33:43)
+
+
+
+function EscapeRegex(string)
+{
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); //(ChatGPT가 제시한 코드를 사용함 (2026/5/3 17:30:00))
+}
+//(2026/5/3 17:30:05)
+
+
+
+const RegexEscapedReferenceIdList = new Array(NumOfRefs);
+
+for(k3 = 0; k3 < NumOfRefs; k3++)
+{
+    RegexEscapedReferenceIdList[k3] = EscapeRegex(ReferenceIdList[k3]); //(각 reference들의 id의 regex-escaped 버전의 문자열을 미리 다 계산해 놓는 전처리 (2026/5/3 17:29:16))
+}
+//(2026/5/3 17:29:19)
+
+
+
 
 
 
@@ -102,6 +192,9 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
 
 //클래스가 GoToPage인 element 안에 들어 있는 수 입력란 (<input> 태그) 의 경우, <label>을 달아야 하기 때문에 어쩔 수 없이 "PageNumInput0", "PageNumInput1", "PageNumInput2", ... 꼴로 각자 개별적인 id를 부여함... . ㅎㅎ 대신 얘네는 style을 지정할 게 많이 없어서 따로 얘네들을 모은 클래스를 만들(고 CSS 파일에 그 클래스 관련 항목을 추가하)지는 않음. ㅎㅎ 그래서 이 element들의 주솟값? 은 (중복 계산 방지를 위해) 미리 (class 대신) id를 통해서 전부 추출해서 PageNumInputElementList array에 저장해 (기록해) 놓음... . ㅎㅎ (2026/5/2 27:32:48) 흠... ㅎㅎ
 
+const            RecallBoxElementList = document.getElementsByClassName(           "RecallBox");
+//이 array의 length도 NumOfProofs와 같음 (2026/5/3 16:25:04)
+
 
 
 function GoToGivenPage(ProofIndex, PageNum) //ProofIndex는 proof의 번호 (index) 를, PageNum은 이동할 페이지의 번호 (number) 를 의미한다.
@@ -165,3 +258,17 @@ function NextPage(ProofIndex)
     //CurrentPageNumList[ProofIndex]를 두 번 계산하는 정도의 중복 계산은 괜찮겠지..? ... ㅎㅎ (2026/5/2 28:15:58) 흠... ㅎㅎ
 }
 //(2026/5/2 28:16:04)
+
+
+
+function ShowReference(ProofIndex, ReferenceId)
+{
+    const reference = document.getElementById(ReferenceId); //(2026/5/3 16:21:08)
+
+    const ReferenceContent = '<div class="' + reference.className + '">'
+            + reference.innerHTML
+        + '</div> '; //(2026/5/3 16:31:28)
+
+    RecallBoxElementList[ProofIndex].innerHTML = ReferenceContent + RecallBoxElementList[ProofIndex].innerHTML; //(2026/5/3 16:26:21)
+}
+//(2026/5/3 16:31:34)
