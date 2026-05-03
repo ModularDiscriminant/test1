@@ -20,7 +20,7 @@ https://developer.mozilla.org/ko/docs/Web/API/NodeList
 */
 
 const NumOfRefs = ReferenceElementList.length; //('reference'를 줄여서 그냥 'ref'라고 (그리고 'references'를 줄여서 그냥 'refs'라고) 적음... . ㅎㅎ (2026/5/3 16:39:59) 흠... ㅎㅎ)
-const ReferenceIdList = new Array(NumOfRefs); //(... 굳이 이런 array를 만들 필요는 없..나? ... ㅋㅋㅋㅋ (2026/5/3 16:42:52) 흠... ㅎㅎ (... RegexEscapedReferenceIdList를 만들고부터는, 진짜로 필요 없을 수도..? ... ㅎㅎ (2026/5/3 17:25:23) 흠... ㅎㅎ) (... 나중에 모든 definition과 theorem, ... 을 모아서 보여주는 기능도 만들고, ... 해야 되나..? ... ㅎㅎ (2026/5/3 17:27:45) 흠... ㅎㅎ))
+const ReferenceIdList = new Array(NumOfRefs); //(... 굳이 이런 array를 만들 필요는 없..나? ... ㅋㅋㅋㅋ (2026/5/3 16:42:52) 흠... ㅎㅎ (... RegexForReferenceIdList를 만들고부터는, 진짜로 필요 없을 수도..? ... ㅎㅎ (2026/5/3 18:17:41) 흠... ㅎㅎ) (... 나중에 모든 definition과 theorem, ... 을 모아서 보여주는 기능도 만들고, ... 해야 되나... ㅎㅎ (2026/5/3 17:27:45) 흠... ㅎㅎ))
 
 
 
@@ -68,10 +68,13 @@ for(k3 = 0; k3 < NumOfRefs; k3++)
 
 
 //------------------------------------------------ (2026/5/3 16:33:43)
+//(구분선 위쪽: 각 definition, theorem, ... 등 reference로 사용되는 것들의 innerHTML을 좀 편집하는 코드,
+//구분선 아래쪽: 모두 클래스가 proof인 element의 내부를 편집하는 코드. ㅎㅎ (2026/5/3 18:26:01) 흠 ㅎㅎ)
 
 
 
-function EscapeRegex(string)
+
+function EscapeRegex(string) //(주어진 긴 문자열 안에서 주어진 문자열 string이 어떤어떤 위치에 포함되어 있는지 정확하게 찾아낼 수 있도록,) 문자열 string 안에 regex (정규 표현식) 에서 사용되는 symbol들이 섞여 있더라도, string을 특수문자들을 잘 escaping하면서 regex로 변환해 주는 함수. ㅎㅎ (2026/5/3 18:11:01) 오오..! ㅎㅎ 흠 ㅎㅎ
 {
     return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); //(ChatGPT가 제시한 코드를 사용함 (2026/5/3 17:30:00))
 }
@@ -79,16 +82,16 @@ function EscapeRegex(string)
 
 
 
-const RegexEscapedReferenceIdList = new Array(NumOfRefs);
+const RegexForReferenceIdList = new Array(NumOfRefs); //각 reference들의 id (문자열) 를, EscapeRegex 함수를 통해서 regex로 바꾼 결과를 계산해서 저장해 놓는 array. ㅎㅎ (2026/5/3 18:08:04) 흠 ㅎㅎ
 
 for(k3 = 0; k3 < NumOfRefs; k3++)
 {
-    RegexEscapedReferenceIdList[k3] = EscapeRegex(ReferenceIdList[k3]); //(각 reference들의 id의 regex-escaped 버전의 문자열을 미리 다 계산해 놓는 전처리 (2026/5/3 17:29:16))
+    RegexForReferenceIdList[k3] = new RegExp(
+        EscapeRegex(ReferenceIdList[k3])
+    , "gi"); //(각 reference들의 id의 regex-escaped 버전의 문자열로 만든 regex를 미리 다 계산해 놓는 전처리 (2026/5/3 18:13:29))
+    //참고: (ChatGPT에 따르면) "gi"에서 g는 global, 즉 문자열 전체를 검사한다는 뜻이고, i는 case-insensitive, 즉 대소문자를 무시하고 검색한다는 뜻이다. (2026/5/3 18:14:19)
 }
-//(2026/5/3 17:29:19)
-
-
-
+//(2026/5/3 18:14:29)
 
 
 
@@ -100,12 +103,110 @@ const CurrentPageNumList = new Array(NumOfProofs); //(2026/5/2 27:23:14)
 
 
 
+let temp1; //주어진 증명에서, 사용된 definition, theorem, ... 등의 reference들을 marking, highlighting, ... 하는 과정에서 사용하는 임시 변수 (2026/5/3 18:21:12)
+let temp2; //(중복 계산 방지용 변수, 문자열을 담음 (2026/5/3 19:12:59))
 let k1, k2;
 
 //<div class="proof">(...)</div> 안에 적힌 증명 읽어서 가져오기 (2026/5/2 25:43:15)
 for(k1 = 0; k1 < NumOfProofs; k1++)
 {
-    ProofList[k1] = WrapperList[k1].innerHTML.split("@@"); //(2026/5/2 24:27:23)
+    temp1 = WrapperList[k1].innerHTML; //(2026/5/3 18:26:30)
+
+    for(k3 = 0; k3 < NumOfRefs; k3++)
+    {
+        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', ' + ReferenceIdList[k3] + ')" style="color: blue; cursor: pointer;">'; //(중복 계산 방지용 변수, 문자열을 담음 (2026/5/3 19:13:10))
+
+
+        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', "' + ReferenceIdList[k3] + '")" style="color: blue; cursor: pointer;">';
+        /*
+        원래는 위와 같이 코드를 짰었는데, 이렇게 코드를 짤 경우, 예컨대 k1은 0이고 ReferenceIdList[k3] (즉 reference의 id) 은 "Freshman's Dream"이라고 했을 때 추후 HTML에는
+            <span onclick="ShowReference(0, "Freshman's Dream")" style="color: blue; cursor: pointer;">Freshman's Dream</span>
+        이런 코드가 들어가게 됨. ㅎㅎ (2026/5/3 28:40:11)
+        근데, 사실 이렇게 짜면 문제가 되는 게...
+            onclick="ShowReference(0, "Freshman's Dream")"
+        부분에서 큰따옴표가 이중으로 겹쳐 있고, 이걸 해결할 수가 없음.
+
+        · 특히 문제는,
+            onclick="ShowReference(0, \"Freshman's Dream\")"
+        와 같이 역슬래시로 escape하려고 시도해도 잘 되지 않는다는 것임. (2026/5/3 28:42:45)
+
+        · 이에 대해 ChatGPT와 Gemini에게 물어보니, 둘 다 [큰따옴표 안쪽이 JavaScript의 문법으로 해석되기 이전에, 저 전체 문자열을 HTML의 문법대로 parsing하는 과정에서 문제가 생긴다. HTML에서는 역슬래시 + 큰따옴표가 큰따옴표의 escaping으로 인식되지 않으며, 결국 저 코드는 그냥 큰따옴표가
+            "ShowReference(0, \" 및 ")"
+        처럼 묶인 상황으로 인식되어 오류를 일으킨다.]고 답변함 (2026/5/3 28:45:30)
+
+        → 해결 방안:
+
+        (1) ChatGPT와 Gemini가 공통적으로 제시한 첫 번째 해결 방법은, 안쪽의 큰따옴표를 (JavaScript식으로 역슬래시 + 큰따옴표와 같이 적어서 escape하는 게 아니라) HTML식으로 &quot;와 같이 적어서 escape하는 것임. ㅎㅎ (2026/5/3 30:24:12)
+        즉, 코드를
+            temp2 = '<span onclick="ShowReference(' + k1.toString() + ', &quot;' + ReferenceIdList[k3] + '&quot;)" style="color: blue; cursor: pointer;">';
+        와 같이 짜는 방법이 있고, 실제로 이렇게 하면 문제가 해결됨 (!) . (2026/5/3 30:24:55)
+
+        ▷ 이 코드를 좀 더 해석해 보면, 예컨대 k1은 0이고 ReferenceIdList[k3]은 "Freshman's Dream"일 때, 추후 HTML에는
+            <span onclick="ShowReference(0, &quot;Freshman's Dream&quot;)" style="color: blue; cursor: pointer;">Freshman's Dream</span>
+        이란 코드가 들어가게 됨. ㅎㅎ 그러면 이걸 HTML parser가 분석하는 과정에서 &quot;을 큰따옴표로 인식하게 되고, 텍스트를 클릭할 시에 onclick="(...)"에서 (...) 부분에 있는 JavaScript 코드인
+            ShowReference(0, &quot;Freshman's Dream&quot;)
+        에서 &quot;를 큰따옴표로 바꿔서, 실제로는
+            ShowReference(0, "Freshman's Dream")
+        이라는 JavaScript 코드를 실행하게 된다고 함..! ㅎㅎ 그래서 문제없이 잘 실행이 되는 원리라고 하네... . ㅎㅎ (2026/5/3 30:33:52) 흠.... ㅎㅎ
+
+
+        (2) Gemini가 제시한 두 번째 해결 방법은, JavaScript에 있는 문법 중 하나인 'template literal'이라는 것을 이용하는 것임. ㅎㅎ 이건 backtick (`) 을 활용해서 만들 수 있는데, 문자열과 비슷하지만 여러 줄에 걸쳐 선언할 수 있고 (이로써 엔터를 자연스럽게 입력할 수 있다는 장점이 있음!!) , 작은따옴표와 큰따옴표를 모두 내부에 별다른 escaping 없이 포함할 수 있음! (2026/5/3 30:27:15)
+        그래서, 결국 backtick (`) 은 작은따옴표와 큰따옴표 다음의, 문자열을 선언하는 세 번째 방법? ... 처럼 기능하게 되는 것 같음... . ㅎㅎ (2026/5/3 30:27:54)
+        이를 사용하면, 다행히도 escape 문제를 간신히 우회할 수 있고,
+            temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">';
+        와 같이 성공적으로 작동하는 코드를 짤 수 있음..! ㅎㅎ (2026/5/3 30:29:47) 오오..! ㅎㅎ 흠 ㅎㅎ
+
+        ▷ 이 코드도 좀 더 해석해 보면, 예컨대 k1은 0이고 ReferenceIdList[k3]은 "Freshman's Dream"일 때, 추후 HTML에는
+            <span onclick="ShowReference(0, `Freshman's Dream`)" style="color: blue; cursor: pointer;">Freshman's Dream</span>
+        이란 코드가 들어가게 됨. ㅎㅎ 그러면 텍스트를 클릭할 시에 JavaScript 코드인
+            ShowReference(0, `Freshman's Dream`)
+        이 실행되게 되고, 이건 실제로 올바른 (유효한) JavaScript 코드이며, apostrophe (작은따옴표) (') 는 backtick으로 감싼 문자열 안에 들어 있으므로 별다른 escape가 필요하지 않게 돼서 (!) 원활하게 코드가 동작하게 된다고 함..!! ㅎㅎ (2026/5/3 30:35:46)
+
+
+        (3) Gemini는 세 번째 해결 방법도 제시했는데, 그냥 텍스트 부분의 HTML 코드는
+            <span class="clickable" data-message="Freshman's Dream">Freshman's Dream</span>
+        과 같은 식으로 간단명료하게 짜고, 나중에 JavaScript 코드 내에서
+            document.querySelectorAll('.clickable').forEach(function (element) {
+                element.addEventListener('click', function () {
+                    ShowReference(0, this.dataset.message);
+                });
+            });
+        이런 식으로 각 element에 직접적으로 하나씩 (손수) event listener를 달아 주면서 클릭 시 원하는 동작을 수행하도록 만드는 방법도 알려줌... . ㅎㅎ
+        이런 식으로 할 경우, HTML 태그 안에 적혀 있는 data-(무언가) 꼴의 attribute들은 그 태그가 품고 있는 데이터로서 기능한다는 점을 활용한다는 것 같네... . ㅎㅎ (2026/5/3 30:44:16)
+        (참고: 실제론 'ShowReference(0, this.dataset.message);'에서 함수의 첫 번째 입력값 0도 텍스트에 따라서 달라지도록, (아마 data-(무언가) 꼴의 attribute들을 활용해서) 좀 더 코드를 수정해야 함... . ㅎㅎ (2026/5/3 30:45:59) 흠... ㅎㅎ)
+        (data attribute의 documentation:
+        https://developer.mozilla.org/ko/docs/Web/HTML/How_to/Use_data_attributes
+        (2026/5/3 30:46:38) 오오..! ㅎㅎ 흠 ㅎㅎ)
+        
+        (... 이 방법은 data attribute 같은 새로운 개념을 배우고 사용해 보도록 해 주며, 논리적으로도 깔끔한 좋은 코드이기는 하지만... 사실 가뜩이나 이 코드 자체도 HTML에 원래 있는 코드가 아니라 JavaScript를 이용해서 나중에 입력될 코드이니, 이 코드를 다 사용하게 되면 JavaScript 코드가 너무 읽기 힘들고 복잡해질 듯해서 이 방법을 채택하지는 않음... . ㅎㅎ
+        (1)이나 (2) 같은 방법이, 코드가 원래와 거의 비슷해서 하고자 하는 바가 명확하면서, 그렇게 길지 않아서 JavaScript의 문자열 안에 담는 것도 합리적이다..라고 생각했음... . ㅎㅎ
+        (2026/5/3 31:16:19) 오오..! ㅎㅎ 흠 ㅎㅎ)
+
+
+        ∴ 결국 나는 방법 (2)를 택해서, backtick을 사용해서 깔끔하게 코드를 짜기로 결정함... . ㅎㅎ
+        (2026/5/3 31:17:12) 오오..! ㅎㅎ 흠 ㅎㅎ
+        */
+        
+        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', &quot;' + ReferenceIdList[k3] + '&quot;)" style="color: blue; cursor: pointer;">';
+
+        temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(2026/5/3 31:18:10)
+
+
+        
+        temp1 = temp1.replace(RegexForReferenceIdList[k3], match => (temp2 + match + '</span>')); //(2026/5/3 19:14:47)
+        /*
+        나는 아까 replace 함수를
+        replace(정규 표현식, 변경 후의 문자열)
+        꼴로 쓰는 것만 (ChatGPT한테) 배웠어서, (find and) replace를 할 때, 변경 후의 문자열이 변경 전의 문자열 (특히 regular expression에 의해 감지 (detect) 된 부분) 의 영향을 받아야 할 경우엔 어떻게 해야 할지 몰랐는데...
+        한 번 더 ChatGPT에게 물어보니, replace 함수를
+        replace(정규 표현식, (정규 표현식이 detect한 문자열을 받아서 변경 후의 문자열을 내놓는 anonymous function))
+        의 꼴로 사용하는 것도 가능하다고 해서, 이걸 사용해서 문제를 해결하는 방법을 배움..!! ㅎㅎ
+        (2026/5/3 19:03:16) 오오..! ㅎㅎ 흠 ㅎㅎ
+        */
+    }
+    //(2026/5/3 19:15:15)
+
+    ProofList[k1] = temp1.split("@@"); //(2026/5/2 24:27:23) (2026/5/3 18:41:19에 수정함)
     /*
     innerHTML, innerText, textContent 중 innerHTML을 쓰는 게 이 상황 (직접적으로 HTML 코드에 적힌 문자열을 읽어와야 하는 상황) 에서 가장 낫다는 것을 배운 것은
     https://hianna.tistory.com/483
