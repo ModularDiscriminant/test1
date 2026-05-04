@@ -313,7 +313,9 @@ function GoToGivenPage(ProofIndex, PageNum) //ProofIndex는 proof의 번호 (ind
          ExampleArgumentElementList[ProofIndex].innerHTML = ProofList[ProofIndex][PageIndex][3];
     //(2026/5/2 28:25:00)
 
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, WrapperList[ProofIndex]]); //(2026/5/2 29:09:57)
+
+
+    //MathJax.Hub.Queue(["Typeset", MathJax.Hub, WrapperList[ProofIndex]]); //(2026/5/2 29:09:57)
     /*
     오오, 전에 찾아본 (그리고 ChatGPT에게 물어봐서 해결한) 바와 같이 이러한 재렌더링이 필요하다는 사실은 알고 있었는데, 전에는 재렌더링하길 원하는 element의 ID를 알고 있을 때
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, (수식을 추가한 요소의 id를 문자열로 입력)]);
@@ -324,6 +326,30 @@ function GoToGivenPage(ProofIndex, PageNum) //ProofIndex는 proof의 번호 (ind
     그래서 이번에도 코드 한 줄 추가로 간편하게 재렌더링에 성공함..!! ㅎㅎ
     오오, 편리하넹..!! ㅎㅎ (2026/5/2 29:14:06) 오오..!! ㅎㅎ 흠 ㅎㅎ
     */
+
+    /*
+    이전에 쓰던 MathJax 2.7.5 버전에서는, 기존에 있던 innerHTML을 복사해서 다른 곳에 붙여넣으면서 수식도 함께 복사하면, 그걸
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, (재렌더링을 진행할 element)]);
+    같은 코드로 재렌더링할 때 복사한 출처가 된 innerHTML에 있는 수식도 영향을 받아서 사라지거나, ... 하는 버그가 있었음... . ㅎㅎ (ChatGPT에게 물어보니, 애초에 MathJax 2.7.5 구현 방식 상의 버그라고 함...) (2026/5/4 18:38:56)
+
+    그래서 ChatGPT로부터, MathJax의 버전을 업그레이드하는 게 좋을 것 같다는 말을 듣고,
+    https://docs.mathjax.org/en/stable/web/start.html
+    에 가서 MathJax (버전 4..!) 의 최신 버전? 최신 안정 버전? ... 을 가져옴..! ㅎㅎ 앞으로는 쭉 이 개선된 버전을 사용하도록 하자... . ㅎㅎ
+    (2026/5/4 18:40:44) 오오..! ㅎㅎ 흠 ㅎㅎ
+    
+    -> ChatGPT에게 물어보니, MathJax의 이 버전 (버전 4) 에서는, 어떤 element에 수식을 추가했고 재렌더링이 필요할 경우, 간단히
+        MathJax.typesetPromise([(재렌더링을 진행할 element)]);
+    라고 입력하면 된다고 함~ ㅎㅎ (2026/5/4 18:42:15)
+    (참고: (ChatGPT 왈) 만약 렌더링한 MathJax 수식을 바로 사용할 일이 있다면, MathJax.typesetPromise의 동작이 끝날 때까지 기다려야 하므로
+        await MathJax.typesetPromise([(재렌더링을 진행할 element)]);
+    라고 적는 것이 더 바람직할 것이라고 함... . ㅎㅎ 그러나 그냥 렌더링을 진행해서 화면에 표시하고 끝이라면, 굳이 await를 붙일 필요는 없다고 함... . ㅎㅎ (특히, await keyword는 async function 안에서만 사용할 수 있다는 점에 유념할 것)
+    (2026/5/4 18:45:12) 옹 ㅎㅎ 흠 ㅎㅎ)
+
+    오케이, 이제 MathJax 4를 사용해서 편리하게 innerHTML의 수식을 복사해서 옮기고, ... 할 수 있겠넹~~ ㅎㅎ
+    (2026/5/4 18:45:57) 오오..!! ㅎㅎ 흠 ㅎㅎ
+    */
+    
+    MathJax.typesetPromise([WrapperList[ProofIndex]]); //(2026/5/4 18:46:45)
 }
 //(2026/5/2 29:14:12)
 
