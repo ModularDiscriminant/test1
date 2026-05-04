@@ -453,7 +453,9 @@ function ShowReference(ProofIndex)
     for(k4 = 0; k4 < NumOfRecallBoxContentsList[ProofIndex]; k4++)
     {
         temp = RecallBoxContentsList[ProofIndex][k4]
-            + `<button onclick="DeleteReference(${ProofIndex.toString()}, ${k4.toString()})" style="cursor: pointer; margin: 5px;">Delete ↑</button>`; //(2026/5/4 21:11:36) ('margin: 5px;'은 2026/5/4 21:22:55에 추가함)
+            + `<div style="text-align: right;">
+                <button onclick="DeleteReference(${ProofIndex.toString()}, ${k4.toString()})" style="cursor: pointer; margin: 5px;">Delete ↑</button>
+            </div>`; //(2026/5/4 21:11:36) ('margin: 5px;'은 2026/5/4 21:22:55에 추가함) ('<div style="text-align: right;">'와 '</div>'는 2026/5/4 29:44:37에 추가함)
         
         TempForRecallBox = temp + TempForRecallBox; //(2026/5/4 21:11:58)
         /*
