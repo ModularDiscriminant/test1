@@ -189,7 +189,9 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
         
         //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', &quot;' + ReferenceIdList[k3] + '&quot;)" style="color: blue; cursor: pointer;">';
 
-        temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(2026/5/3 31:18:10)
+        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(2026/5/3 31:18:10)
+
+        temp2 = '<span onclick="AddReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(원래는 'ShowReference' 함수를 썼는데, 화면에 표시된 reference를 버튼을 눌러 삭제하는 기능을 추가하면서 'ShowReference'를 'AddReference'로 바꿈 (2026/5/4 21:18:42))
 
 
         
@@ -396,14 +398,74 @@ function NextPage(ProofIndex)
 
 
 
-function ShowReference(ProofIndex, ReferenceId)
+
+//------------------------------------------------ (2026/5/4 20:21:42)
+//(구분선 (바로) 위쪽: 클래스가 proof인 element의 내부를 편집하는 코드,
+//구분선 아래쪽: (클래스가 proof인 element 안에 있는) 클래스가 RecallBox인 element의 내부를 편집하는 코드. ㅎㅎ (2026/5/4 20:24:37) 흠 ㅎㅎ)
+
+
+
+
+const RecallBoxContentsList = Array.from({length: NumOfProofs}, () => []); //길이가 NumOfProofs이고, 각 항목이 전부 (모두 서로 다른 오브젝트인 (모두 서로 주솟값이 다른)) empty array ('[]') 로 초기화되어 있는 array를 만드는 코드. ㅎㅎ (여기서 '() => []'는 아무것도 입력받지 않고 empty array를 출력받는 anonymous function임) (2026/5/4 20:39:48) 흠 ㅎㅎ
+//RecallBoxContentsList의 각 항목은 각 RecallBox의 내용 (contents) 을 기록하는 array에 해당함. ㅎㅎ 즉 RecallBoxContentsList는 (길이가 가변적이고 서로 다를 수 있는) array들의 array임. ㅎㅎ (2026/5/4 20:41:13) 오오..! ㅎㅎ 흠 ㅎㅎ
+//(참고: https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/from (2026/5/4 20:39:54))
+const NumOfRecallBoxContentsList = new Array(NumOfProofs).fill(0); //길이가 NumOfProofs이고, 각 항목이 전부 0으로 초기화되어 있는 array를 만드는 코드. ㅎㅎ (여기서는 각 항목이 모두 (primitive type인) 정수이므로, 굳이 모두 서로 다른 오브젝트로 만들기 위해 fill 대신 from을 쓰는 식으로 애쓸 필요가 없음) (2026/5/4 20:47:43)
+//NumOfRecallBoxContentsList[k1]은 늘 RecallBoxContentsList[k1].length와 같음. 매번 '.length'를 통해 길이 값을 읽어 오는 게 약간 비효율적이지 않을까 싶어서 그냥 다 length 값을 저장해 놓는 중복 계산 방지용 변수를 만들어 본 것임... . ㅎㅎ (... 굳이 그럴 필요는 없으려나...? ㅋㅋㅋㅋ...) (2026/5/4 20:49:31) 흠... ㅎㅎ
+
+
+
+function AddReference(ProofIndex, ReferenceId) //(2026/5/4)
 {
     const reference = document.getElementById(ReferenceId); //(2026/5/3 16:21:08)
 
     const ReferenceContent = '<div class="' + reference.className + '">'
             + reference.innerHTML
         + '</div> '; //(2026/5/3 16:31:28)
+    
+    RecallBoxContentsList[ProofIndex].push(ReferenceContent); //(2026/5/4 20:55:17)
+    //(화면에 보이는 순서가 아래에서 위로든 위에서 아래로든 상관없이, RecallBoxContentsList에 reference들을 담을 때는 계속 오른쪽 (array의 index가 늘어나는 방향) 에 새 항목을 추가함에 주의 (2026/5/4 20:56:06))
+    NumOfRecallBoxContentsList[ProofIndex]++; //(2026/5/4 20:59:02)
 
-    RecallBoxElementList[ProofIndex].innerHTML = ReferenceContent + RecallBoxElementList[ProofIndex].innerHTML; //(2026/5/3 16:26:21)
+    ShowReference(ProofIndex); //화면을 업데이트하는 코드 (2026/5/4 21:15:44)
 }
-//(2026/5/3 16:31:34)
+//(2026/5/4 21:15:50)
+
+
+
+function DeleteReference(ProofIndex, ReferenceIndex) //ReferenceIndex는, 한 RecallBox 안에서 특정한 reference (definition / theorem / ... (의 직사각형 상자)) 가 (아래에서부터) 몇 번째인지를 세는 index로, 0부터 시작함 (2026/5/4 20:44:41)
+{
+    RecallBoxContentsList[ProofIndex].splice(ReferenceIndex, 1); //(2026/5/4 20:58:32)
+    NumOfRecallBoxContentsList[ProofIndex]--; //(2026/5/4 20:59:12)
+
+    ShowReference(ProofIndex); //화면을 업데이트하는 코드 (2026/5/4 21:15:55)
+}
+//(2026/5/4 21:15:57)
+
+
+
+function ShowReference(ProofIndex)
+//(함수명을 UpdateReference, ... 같은 이름으로 바꿀까 생각도 해 봤지만, 이 함수는 reference들의 목록을 (단순히 내부적으로 업데이트만 하는 게 아니라) 실제로 화면에 띄우는 기능을 가지고 있으므로, 역시 ShowReference라는 이름이 더 적합한 것 같다고 판단함... . ㅎㅎ (2026/5/4 21:00:45) 흠... ㅎㅎ)
+{
+    let TempForRecallBox = ""; //RecallBoxElementList[ProofIndex].innerHTML에 넣을 내용 (문자열) 을 임시로 저장해 두는 변수 (2026/5/4 21:06:10) (2026/5/4 21:20:00에 ' = ""'을 추가함)
+    let temp; //이 함수 바깥에서 정의된 temp1, temp2와 겹치지 않으려고 이름을 temp라고 지음 (2026/5/4 21:06:39)
+    let k4; //마찬가지로 이 함수 바깥에서 정의된 k1, k2, k3와 겹치지 않으려고 이름을 k4라고 지음 (+ k1, k2, k3는 각각 어떤 범위에서 도는 dummy variable인지가 역할이 명확히 나뉘어 있기 때문에, 여기서 사용되는 완전히 새로운 의미의 새 dummy variable에는 새 이름을 부여하는 게 맞다고 생각했음) (2026/5/4 21:07:33)
+
+    for(k4 = 0; k4 < NumOfRecallBoxContentsList[ProofIndex]; k4++)
+    {
+        temp = RecallBoxContentsList[ProofIndex][k4]
+            + `<button onclick="DeleteReference(${ProofIndex.toString()}, ${k4.toString()})" style="cursor: pointer; margin: 5px;">Delete ↑</button>`; //(2026/5/4 21:11:36) ('margin: 5px;'은 2026/5/4 21:22:55에 추가함)
+        
+        TempForRecallBox = temp + TempForRecallBox; //(2026/5/4 21:11:58)
+        /*
+        참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
+            TempForRecallBox = TempForRecallBox + temp;
+        혹은
+            TempForRecallBox += temp;
+        라는 코드를 사용하면 된다. ㅎㅎ
+        (2026/5/4 21:14:00) 오오..! ㅎㅎ 흠 ㅎㅎ
+        */
+    }
+
+    RecallBoxElementList[ProofIndex].innerHTML = TempForRecallBox; //(2026/5/4 21:12:04)
+}
+//(2026/5/4 21:23:04)
