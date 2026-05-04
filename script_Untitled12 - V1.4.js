@@ -224,46 +224,54 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
 //<div class="proof">(...)</div> 안에 ArgumentBox를 비롯한 구조들을 전부 집어넣기 (2026/5/2 25:45:42)
 for(k1 = 0; k1 < NumOfProofs; k1++)
 {
-    //편의상, 가독성을 위해 실제 HTML에서 적을 때와 똑같이 들여쓰기를 해서 적음... . ㅎㅎ (2026/5/2 26:24:39) 흠... ㅎㅎ
-    WrapperList[k1].innerHTML = '<h2>Proof.</h2> '
-        + '<div class="ArgumentBox"> '
-            + '<div class="CurrentPage"> '
-                + 'Current Page: 1/' + ProofLenList[k1].toString()
-            + '</div> '
+    WrapperList[k1].innerHTML = `<h2>Proof.</h2>
+        <div class="ArgumentBox">
+            <div class="CurrentPage">
+                Current Page: 1/${ProofLenList[k1].toString()}
+            </div>
 
-            + '<div class="GoToPage"> '
-                + '<label for="PageNumInput' + k1.toString() + '">Go to Page</label> &nbsp;&nbsp; ' //(2026/5/2 27:28:23)
-                + '<input type="number" id="PageNumInput' + k1.toString() + '" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp; ' //(2026/5/2 27:28:23)
-                + '<button onclick="ChangePage(' + k1.toString() + ')" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button> ' //(2026/5/2 28:26:52)
-            + '</div> '
+            <div class="GoToPage">
+                <label for="PageNumInput${k1.toString()}">Go to Page</label> &nbsp;&nbsp;
+                <input type="number" id="PageNumInput${k1.toString()}" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button onclick="ChangePage(${k1.toString()})" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
+            </div>
 
-            + '<button class="PrevButton" onclick="PrevPage(' + k1.toString() + ')"> ' //(2026/5/2 28:27:05)
-                + '← Previous '
-            + '</button> '
+            <button class="PrevButton" onclick="PrevPage(${k1.toString()})">
+                ← Previous
+            </button>
 
-            + '<button class="NextButton" onclick="NextPage(' + k1.toString() + ')"> ' //(2026/5/2 28:27:17)
-                + 'Next → '
-            + '</button> '
+            <button class="NextButton" onclick="NextPage(${k1.toString()})">
+                Next →
+            </button>
 
-            + '<div class="StatusAndGoal"> '
-                + ProofList[k1][0][0]
-            + '</div> '
+            <div class="StatusAndGoal">
+                ${ProofList[k1][0][0]}
+            </div>
 
-            + '<div class="ExampleStatusAndGoal"> '
-                + ProofList[k1][0][2] //(2026/5/2 29:47:52)
-            + '</div> '
+            <div class="ExampleStatusAndGoal">
+                ${ProofList[k1][0][2]}
+            </div>
 
-            + '<div class="Argument"> '
-                + ProofList[k1][0][1] //(2026/5/2 29:47:59)
-            + '</div> '
+            <div class="Argument">
+                ${ProofList[k1][0][1]}
+            </div>
 
-            + '<div class="ExampleArgument"> '
-                + ProofList[k1][0][3]
-            + '</div> '
-        + '</div> '
+            <div class="ExampleArgument">
+                ${ProofList[k1][0][3]}
+            </div>
+        </div>
 
-        + '<br> '
-        + '<div class="RecallBox"></div> '; //(2026/5/2 26:31:15) (클래스명을 전부 각 칸의 명칭에 맞춰 수정한 시각: 2026/5/2 26:51:05)
+        <br>
+        <div class="RecallBox"></div>`; //(2026/5/4 19:48:56)
+    /*
+    (backtick으로 감싼 template literal을 사용하면, 기존처럼 HTML 코드의 모든 행을 따로따로 문자열로 만들고 전부 '+'로 잇는 수고를 하지 않아도 되며, 더하여 문자열 안에 들어 있어야 하는 변수들도 ('${...}'를 사용해서) 전부 간단히 문자열 안에 삽입할 수 있다는 것을 알게 돼서, 기존보다 코드가 더욱 보기 편하고 깔끔해질 것 같아서 이 장문의 문자열 부분만 template literal을 사용해서 다시 코딩해 봄... . ㅎㅎ (기능에는 전혀 차이가 없음!) (2026/5/4 19:52:47)
+    코드에서 문자열을 사용하는 나머지 부분들은 (사실 길이가 그렇게 길지 않아서) 죄다 backtick을 사용하는 template literal로 고쳐 놓지는 않겠지만, 아마도 추후에는 코딩할 때 이렇게 backtick과 '${...}'를 사용해서 innerHTML에 넣을 문자열을 편집하는 방식을 많이 사용할 듯..?? ... ㅎㅎ (2026/5/4 19:55:11) 오오..!! ㅎㅎ 흠 ㅎㅎ
+    + 추가로, backtick과 '${...}'을 쓰는 방식으로 코딩 방식을 바꾸더라도, 문자열을 concatenate할 때에는 명시적으로 문자열 타입인 것들만 사용해야 한다는 (즉, 형 변환이 필요하다면 명시적 형 변환을 진행해야 한다는) 내 관점은 바뀌지 않음... . ㅎㅎ 그래서 ('${k1}'과 같이 쓰는 게 비록 짧고 간결해 보이더라도) 문자열이 아닌, 예컨대 수 (number) 변수와 같은 경우 전부 '${k1.toString()}'과 같이 명시적 형 변환을 진행하고 문자열에 삽입하는 식으로 적었음... . ㅎㅎ (그래야 코드를 읽는 사람이 각 변수의 타입에 대해서 혼동 없이 보다 명확하게 인식할 수 있기 때문... .) (2026/5/4 20:00:43) 흠... ㅎㅎ)
+    */
+    //(참고: backtick을 사용하지 않고 문자열만으로 모두 처리했던 기존 코드를 완성했던 시각은 2026/5/2 26:31:15였고, 거기서 클래스명을 전부 각 칸의 명칭에 맞춰 수정한 시각은 2026/5/2 26:51:05였음. ㅎㅎ (2026/5/4 19:56:47))
+
+
+
     //(... 지금 보니 클래스명 중 'Argument'는 단일 단어임에도 그냥 전부 소문자로 적지 않고 (파스칼 케이스를 따라) 대문자로 시작하게 적어 버렸네... ㅋㅋㅋㅋ (그냥 놔둬도 괜찮겠지..? ㅋㅋㅋㅋ) (2026/5/2 26:58:31) 흠 ㅎㅎ)
     CurrentPageNumList[k1] = 1; //페이지 번호는 양의 정수 (1, 2, 3, ...) 로 세며, 0을 포함하지 않는 것이 나의 convention이다. 그러므로 첫 페이지는 1페이지이다. (2026/5/2 27:25:00)
 }
