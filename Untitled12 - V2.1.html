@@ -1,0 +1,102 @@
+<!--2026/5/5-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untitled12 - V2.1</title>
+
+    <link href="style_Untitled12 - V2.1.css" rel="stylesheet" type="text/css">
+    <!--"style.css" 자리에, 적절한 원하는 css 파일의 이름을 삽입할 것 (2025/8/19 25:29:43)-->
+
+
+    <!--
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+    -->
+    <!--
+    https://m.blog.naver.com/mathesis_time/222108156490
+    이 글에서 가져옴~! ㅎㅎ (2025/8/17 19:38:20) 오오..! ㅎㅎ 흠 ㅎㅎ
+    -->
+
+    <script>
+    MathJax = {
+    tex: {
+        inlineMath: {'[+]': [['$', '$']]}
+    }
+    };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+    <!--
+    MathJax 공식 documentation인
+    https://docs.mathjax.org/en/stable/web/start.html
+    이 글에서 가져옴 (2026/5/4 18:34:27)
+    -->
+</head>
+<body>
+    <h1>Untitled12 - V2.1</h1>
+
+
+
+    <div class="def" id="Test Definition">
+        This is a <b>test definition</b>.
+    </div>
+    <!--(2026/5/4 21:25:57)-->
+    <br>
+
+
+
+    <!--
+    theorem 명칭 적을 때의 convention:
+    · 각 단어의 첫 글자를 모두 대문자로 쓰고, 전치사 같은 단어들만 소문자로 적는다. (근데 증명 내에서 어떤 theorem을 썼는지 감지할 때, 대소문자는 무시하도록 할 예정임) (2026/5/3 15:02:44)
+    · 맨 앞 (맨 왼쪽) 에 붙이는 the는 되도록이면 생략한다. (the를 붙였다가는, 증명을 적을 때 매번 그 the를 기억하고 적절히 붙여 줘야 그 theorem이 사용되었음이 감지 (detect) 될 것이기 때문임 (2026/5/3 15:07:22))
+    · (Freshman's Dream처럼, 아예 굳어진 고유한 이름이 있는 게 아니라면...) 사람 이름이 포함된 정리에서는 사람 이름 뒤에 굳이 apostrophe s를 쓰지 말기. (그렇게 통일해 놓아야 추후에 헷갈리지 않음) (2026/5/3 15:49:28)
+    -->
+
+    <div class="thm" id="Freshman's Dream">
+        Let $p$ be a prime number. Let $K$ be a field of characteristic $p$. Let $a, b \in K$ be elements of $K$. Then
+        $$(a + b)^p = a^p + b^p.$$
+    </div>
+    <!--(2026/5/3 15:08:51)-->
+
+
+
+    <div class="proof">
+        $$A$$ @ $B$ by Freshman's Dream. @ C @ D by Test Definition.
+        <!--('by Test Definition.'은 2026/5/4 21:26:54에 적음)-->
+        
+        @@
+        
+        $$E$$ @ $F$ @ G @ H
+    </div>
+
+    <div class="proof">
+        $$I$$ @ $J$ @ K @ L
+        
+        @@
+        
+        $$M$$ @ If we use freshman's dream, we get $N$. @ O @ P
+        <!--(테스트를 위해, 일부러 id에 맞춰서 정확하게 대문자로 Freshman's Dream이라고 적지 않고, 그냥 다 소문자로 적음. (2026/5/3 19:17:18))-->
+
+        @@
+
+        $$Q$$ @ $R$ @ S @ T
+    </div>
+    <!--(2026/5/2 26:36:43)-->
+
+    
+    
+    <br><br><br><br><br><br>
+    <a href="index.html">Go Back</a>
+    
+    <script src="script_Untitled12 - V2.1.js"></script>
+    <!--"script.js" 자리에, 적절한 원하는 js (자바스크립트) 파일의 이름을 삽입할 것 (2025/10/12 23:07:47)-->
+</body>
+</html>
