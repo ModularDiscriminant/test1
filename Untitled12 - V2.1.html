@@ -49,7 +49,7 @@
         This is a <b>test definition</b>.
     </div>
     <!--(2026/5/4 21:25:57)-->
-    <br>
+    <br><br><br>
 
 
 
@@ -58,6 +58,10 @@
     · 각 단어의 첫 글자를 모두 대문자로 쓰고, 전치사 같은 단어들만 소문자로 적는다. (근데 증명 내에서 어떤 theorem을 썼는지 감지할 때, 대소문자는 무시하도록 할 예정임) (2026/5/3 15:02:44)
     · 맨 앞 (맨 왼쪽) 에 붙이는 the는 되도록이면 생략한다. (the를 붙였다가는, 증명을 적을 때 매번 그 the를 기억하고 적절히 붙여 줘야 그 theorem이 사용되었음이 감지 (detect) 될 것이기 때문임 (2026/5/3 15:07:22))
     · (Freshman's Dream처럼, 아예 굳어진 고유한 이름이 있는 게 아니라면...) 사람 이름이 포함된 정리에서는 사람 이름 뒤에 굳이 apostrophe s를 쓰지 말기. (그렇게 통일해 놓아야 추후에 헷갈리지 않음) (2026/5/3 15:49:28)
+    -->
+
+    <!--
+    참고: reference 명칭을 적을 때에는 절대 대소문자만 다르고 이름이 정확히 똑같은 명칭을 여러 개 사용해서는 안 된다. (그랬다가는 참조 시 오류가 날 수 있음) (이는 '[[]]'을 통해서 참조를 할 때, 그 안에 적힌 내용의 대소문자를 무시하기 때문이다.) (2026/5/5 17:42:00)
     -->
 
     <div class="thm" id="Freshman's Dream">
@@ -69,27 +73,56 @@
 
 
     <div class="proof">
-        $$A$$ @ $B$ by Freshman's Dream. @ C @ D by Test Definition.
-        <!--('by Test Definition.'은 2026/5/4 21:26:54에 적음)-->
+        $$A$$ @ $B$ by [[Freshman's Dream]]. @ C @ D by [[Test Definition]].
+        <!--(2026/5/5 16:51:57)-->
         
         @@
         
         $$E$$ @ $F$ @ G @ H
     </div>
+    <br><br><br>
+
+
+
+    <div class="thm" id="Test Theorem 1">
+        Let $\mathcal{T}$ be a [[test definition]]. (Note that [[Freshman's Dream]] also holds for $\mathcal{T}$; see [[Test Theorem 2]] below.) Then $\mathcal{T}$ possesses [[amazingness]].
+    </div>
+    <!--(2026/5/5 27:07:26)-->
+
+
 
     <div class="proof">
-        $$I$$ @ $J$ @ K @ L
+        $$I$$ @ $J$ stands for the [[j-invariant]]. @ K @ L (c.f. [[test definition 2]] and [[test theorem 2]] below)
+        <!--(2026/5/5 27:01:22) ('(c.f. [[test definition 2]] and [[test theorem 2]] below)'는 2026/5/5 27:20:15에 추가함)-->
         
         @@
         
-        $$M$$ @ If we use freshman's dream, we get $N$. @ O @ P
-        <!--(테스트를 위해, 일부러 id에 맞춰서 정확하게 대문자로 Freshman's Dream이라고 적지 않고, 그냥 다 소문자로 적음. (2026/5/3 19:17:18))-->
+        $$M$$ @ If we use [[freshman's dream]], we get $N$. @ O @ P
+        <!--(2026/5/5 16:52:14)-->
 
         @@
 
         $$Q$$ @ $R$ @ S @ T
     </div>
-    <!--(2026/5/2 26:36:43)-->
+    <!--(2026/5/5 16:52:23)-->
+    <br><br><br>
+
+
+
+    <div class="def" id="Test Definition 2">
+        This is a <b>test definition of the second kind</b> (which is guaranteed to exist by [[test theorem 1]]) .
+    </div>
+    <!--(2026/5/5 27:12:23) ('(which is guaranteed to exist by [[test theorem 1]])'은 2026/5/5 27:18:20에 추가함)-->
+    <br><br><br>
+
+
+
+    <div class="cor" id="Test Theorem 2">
+        Let $\mathcal{T}_1$ be a [[test definition]] and $\mathcal{T}_2$ be a [[test definition 2]], namely, a [[test definition of the second kind]]. Then
+        $$\mathcal{T}_1 = \mathcal{T}_2.$$
+        Furthermore, both $\mathcal{T}_1$ and $\mathcal{T}_2$ satisfy [[Freshman's Dream]].
+    </div>
+    <!--(2026/5/5 27:15:58)-->
 
     
     

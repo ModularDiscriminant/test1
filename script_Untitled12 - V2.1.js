@@ -20,7 +20,9 @@ https://developer.mozilla.org/ko/docs/Web/API/NodeList
 */
 
 const NumOfRefs = ReferenceElementList.length; //('reference'를 줄여서 그냥 'ref'라고 (그리고 'references'를 줄여서 그냥 'refs'라고) 적음... . ㅎㅎ (2026/5/3 16:39:59) 흠... ㅎㅎ)
-const ReferenceIdList = new Array(NumOfRefs); //(... 굳이 이런 array를 만들 필요는 없..나? ... ㅋㅋㅋㅋ (2026/5/3 16:42:52) 흠... ㅎㅎ (... RegexForReferenceIdList를 만들고부터는, 진짜로 필요 없을 수도..? ... ㅎㅎ (2026/5/3 18:17:41) 흠... ㅎㅎ) (... 나중에 모든 definition과 theorem, ... 을 모아서 보여주는 기능도 만들고, ... 해야 되나... ㅎㅎ (2026/5/3 17:27:45) 흠... ㅎㅎ))
+const ReferenceIdList = new Array(NumOfRefs); //(... 굳이 이런 array를 만들 필요는 없..나? ... ㅋㅋㅋㅋ (2026/5/3 16:42:52) 흠... ㅎㅎ (... ReferenceIdLowerCaseList는 있어야 하지만, ReferenceIdList는 없어도 되려..나..? ... ㅎㅎ (2026/5/5 24:59:58) 흠... ㅎㅎ) (... 나중에 모든 definition과 theorem, ... 을 모아서 보여주는 기능도 만들고, ... 해야 되나... ㅎㅎ (2026/5/3 17:27:45) 흠... ㅎㅎ))
+
+const ReferenceIdLowerCaseList = new Array(NumOfRefs); //(추후 비교를 위함 (2026/5/5 17:39:23))
 
 
 
@@ -51,6 +53,33 @@ function FullNameOfClassForRefs(ClassName)
 
 
 
+function HighlightSelectedTextForReferences(text) /*
+이중 대괄호 ('[[]]') 안에 적은, 선택된 (selected) 텍스트를
+· (reference를 연결하고 파랗게 칠하(고 마우스 포인터를 올렸을 때 모양을 클릭하는 모양으로 바꾸)거나,
+· (연결할 수 있는 reference가 없으면) 약간 어둡게 파랗게 칠함 (그리고 마우스 포인터를 올렸을 때 모양을 바꾸지 않음) 으로써)
+highlight하는 함수. (2026/5/5 24:38:57)
+(원래는 함수명을 그냥 HighlightSelectedText라고 지으려고 했는데, 생각해 보니 reference 버전과 proof 버전을 따로 만들어야 할 것 같아서 HighlightSelectedTextForReferences 함수와 HighlightSelectedTextForProofs 함수를 따로 만듦 (분리함) ... . ㅎㅎ (2026/5/5 24:53:54) 흠... ㅎㅎ
+(... 두 함수의 내부 코드엔 거의 차이가 없어서 (딱 하나, 'AddReferenceForReferences'와 'AddReferenceForProofs'의 차이밖에 없음 (2026/5/5 25:27:01)) , 하나로 합치려면 합칠 수도 있을 것 같긴 한데... ㅋㅋㅋㅎ... (2026/5/5 24:54:18) 흠... ㅎㅎ))
+*/
+{
+    const index = ReferenceIdLowerCaseList.indexOf(text.toLowerCase()); //(2026/5/5 24:44:16)
+    if(index !== -1)
+    {
+        return `<span onclick="AddReferenceForReferences(this, ${index.toString()})" style="color: blue; cursor: pointer;">${text}</span>`; //(오오, 이전에 골머리를 앓았던, onclick 안의 함수에 문자열 입력값을 넣을 때의 escaping 문제, ... 가 눈 녹듯 사라졌네..! ㅎㅎ (2026/5/5 25:04:35) 오오..! ㅎㅎ 흠 ㅎㅎ)
+    }
+    else
+    {
+        return `<span style="color: darkblue;">${text}</span>`; //(2026/5/5 25:05:47)
+    }
+}
+//(2026/5/5 25:05:53)
+
+
+
+const ReferenceContentList = new Array(NumOfRefs); //각 reference에 들어 있는 내용 (content (여러 개이진 않고 한 reference에 대한 내용이므로 content's'가 아님)) 을 모두 백업해 놓는 리스트. (추후엔 클래스가 def, thm 등인 element들 안에도 RecallBox를 삽입하고, 그 안에 다시 reference를 중첩해서 켤 수 있도록 할 것이기 때문... .) ㅎㅎ (2026/5/5 17:32:37) 흠... ㅎㅎ
+
+
+
 let ref; //(중복 계산 방지용 변수이기도 하고, 코드의 가독성을 위한 것도 있음 (2026/5/3 17:13:55))
 let k3;
 
@@ -59,10 +88,23 @@ for(k3 = 0; k3 < NumOfRefs; k3++)
     ref = ReferenceElementList[k3]; //(중복 계산 방지용 / 가독성용 변수 (2026/5/3 17:14:24))
 
     ReferenceIdList[k3] = ref.id; //(2026/5/3 16:43:09) (2026/5/3 17:14:35에 수정함)
-
-    ref.innerHTML = '<span style="font-size: 20px"><b>' + FullNameOfClassForRefs(ref.className) + '.</b> (' + ref.id + ')</span> <br><br> ' + ref.innerHTML; //(ref.id를 쓸지 ReferenceIdList[k3]를 쓸지 (뭐가 더 빠를지, ...) 고민했는데, 일단 그냥 ref.id를 씀 (2026/5/3 17:16:54)) (2026/5/3 18:03:49에 '<br>'을 '<br><br>'로 바꿈)
+    ReferenceIdLowerCaseList[k3] = ref.id.toLowerCase(); //(이것도 ref.id와 ReferenceIdList[k3] 중 고민하다가 그냥 ref.id를 씀 (2026/5/5 17:43:49))
 }
-//(2026/5/3 17:17:19)
+//(HighlightSelectedTextForReferences 함수를 사용하려면, 일단 ReferenceIdLowerCaseList가 전부 준비되어 있어야 해서 이 반복문은 따로 분리했음 (분리해야 했음) ... . ㅎㅎ (2026/5/5 25:18:45) 흠... ㅎㅎ)
+//(2026/5/5 25:15:03)
+
+for(k3 = 0; k3 < NumOfRefs; k3++)
+{
+    ref = ReferenceElementList[k3]; //(2026/5/5 25:17:25)
+
+    ref.innerHTML = '<span style="font-size: 20px"><b>' + FullNameOfClassForRefs(ref.className) + '.</b> (' + ref.id + ')</span> <br><br> ' //(ref.id를 쓸지 ReferenceIdList[k3]를 쓸지 (뭐가 더 빠를지, ...) 고민했는데, 일단 그냥 ref.id를 씀 (2026/5/3 17:16:54)) (2026/5/3 18:03:49에 '<br>'을 '<br><br>'로 바꿈)
+        + ref.innerHTML.replace(/\[\[(.*?)\]\]/g, (match, inner) => HighlightSelectedTextForReferences(inner)) //(2026/5/5 25:10:03)
+        + '<div class="RecallBox"></div>'; //(2026/5/5 25:50:04)
+    //(ref.id를 쓸지 ReferenceIdList[k3]를 쓸지 (뭐가 더 빠를지, ...) 고민했는데, 일단 그냥 ref.id를 씀 (2026/5/3 17:16:54))
+
+    ReferenceContentList[k3] = ref.innerHTML; //(위에서 계산한 문자열을 바로 ReferenceContentList[k3]에 넣고, 그 뒤에 'ref.innerHTML = ReferenceContentList[k3];'을 하는 게 더 나을까... 하는 생각도 했지만, ref.innerHTML을 다시 불러오는 게 그렇게 시간이 많이 걸리지는 않을 것 같다는 생각이 있었고, 또한 ref.innerHTML에 한 번 집어넣어서 HTML 파싱을 하는 등 뭔가 처리를 거친 후에 (?) (처리가 끝난 후) 다시 그걸 불러와서 ReferenceContentList[k3]에 저장해 두는 게 (아마) 살짝 더 나을 것 같다고 생각했음... . ㅎㅎ (2026/5/5 25:40:21) 흠... ㅎㅎ)
+}
+//(2026/5/5 25:50:13)
 
 
 
@@ -74,27 +116,6 @@ for(k3 = 0; k3 < NumOfRefs; k3++)
 
 
 
-function EscapeRegex(string) //(주어진 긴 문자열 안에서 주어진 문자열 string이 어떤어떤 위치에 포함되어 있는지 정확하게 찾아낼 수 있도록,) 문자열 string 안에 regex (정규 표현식) 에서 사용되는 symbol들이 섞여 있더라도, string을 특수문자들을 잘 escaping하면서 regex로 변환해 주는 함수. ㅎㅎ (2026/5/3 18:11:01) 오오..! ㅎㅎ 흠 ㅎㅎ
-{
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); //(ChatGPT가 제시한 코드를 사용함 (2026/5/3 17:30:00))
-}
-//(2026/5/3 17:30:05)
-
-
-
-const RegexForReferenceIdList = new Array(NumOfRefs); //각 reference들의 id (문자열) 를, EscapeRegex 함수를 통해서 regex로 바꾼 결과를 계산해서 저장해 놓는 array. ㅎㅎ (2026/5/3 18:08:04) 흠 ㅎㅎ
-
-for(k3 = 0; k3 < NumOfRefs; k3++)
-{
-    RegexForReferenceIdList[k3] = new RegExp(
-        EscapeRegex(ReferenceIdList[k3])
-    , "gi"); //(각 reference들의 id의 regex-escaped 버전의 문자열로 만든 regex를 미리 다 계산해 놓는 전처리 (2026/5/3 18:13:29))
-    //참고: (ChatGPT에 따르면) "gi"에서 g는 global, 즉 문자열 전체를 검사한다는 뜻이고, i는 case-insensitive, 즉 대소문자를 무시하고 검색한다는 뜻이다. (2026/5/3 18:14:19)
-}
-//(2026/5/3 18:14:29)
-
-
-
 const WrapperList = document.getElementsByClassName("proof"); //(2026/5/2 23:51:04)
 const NumOfProofs = WrapperList.length; //(2026/5/2 23:52:40)
 const ProofList = new Array(NumOfProofs); //(2026/5/2 24:14:44)
@@ -103,112 +124,37 @@ const CurrentPageNumList = new Array(NumOfProofs); //(2026/5/2 27:23:14)
 
 
 
+function HighlightSelectedTextForProofs(text) /*
+이중 대괄호 ('[[]]') 안에 적은, 선택된 (selected) 텍스트를
+· (reference를 연결하고 파랗게 칠하(고 마우스 포인터를 올렸을 때 모양을 클릭하는 모양으로 바꾸)거나,
+· (연결할 수 있는 reference가 없으면) 약간 어둡게 파랗게 칠함 (그리고 마우스 포인터를 올렸을 때 모양을 바꾸지 않음) 으로써)
+highlight하는 함수. (2026/5/5 24:38:57)
+(원래는 함수명을 그냥 HighlightSelectedText라고 지으려고 했는데, 생각해 보니 reference 버전과 proof 버전을 따로 만들어야 할 것 같아서 HighlightSelectedTextForReferences 함수와 HighlightSelectedTextForProofs 함수를 따로 만듦 (분리함) ... . ㅎㅎ (2026/5/5 24:53:54) 흠... ㅎㅎ
+(... 두 함수의 내부 코드엔 거의 차이가 없어서 (딱 하나, 'AddReferenceForReferences'와 'AddReferenceForProofs'의 차이밖에 없음 (2026/5/5 25:27:12)) , 하나로 합치려면 합칠 수도 있을 것 같긴 한데... ㅋㅋㅋㅎ... (2026/5/5 24:54:18) 흠... ㅎㅎ))
+*/
+{
+    const index = ReferenceIdLowerCaseList.indexOf(text.toLowerCase()); //(2026/5/5 24:44:16)
+    if(index !== -1)
+    {
+        return `<span onclick="AddReferenceForProofs(this, ${index.toString()})" style="color: blue; cursor: pointer;">${text}</span>`; //(오오, 이전에 골머리를 앓았던, onclick 안의 함수에 문자열 입력값을 넣을 때의 escaping 문제, ... 가 눈 녹듯 사라졌네..! ㅎㅎ (2026/5/5 25:04:35) 오오..! ㅎㅎ 흠 ㅎㅎ)
+    }
+    else
+    {
+        return `<span style="color: darkblue;">${text}</span>`; //(2026/5/5 25:05:47)
+    }
+}
+//(2026/5/5 25:05:53)
+
+
+
 let temp1; //주어진 증명에서, 사용된 definition, theorem, ... 등의 reference들을 marking, highlighting, ... 하는 과정에서 사용하는 임시 변수 (2026/5/3 18:21:12)
-let temp2; //(중복 계산 방지용 변수, 문자열을 담음 (2026/5/3 19:12:59))
+//let temp2; //(중복 계산 방지용 변수, 문자열을 담음 (2026/5/3 19:12:59))
 let k1, k2;
 
 //<div class="proof">(...)</div> 안에 적힌 증명 읽어서 가져오기 (2026/5/2 25:43:15)
 for(k1 = 0; k1 < NumOfProofs; k1++)
 {
-    temp1 = WrapperList[k1].innerHTML; //(2026/5/3 18:26:30)
-
-    for(k3 = 0; k3 < NumOfRefs; k3++)
-    {
-        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', ' + ReferenceIdList[k3] + ')" style="color: blue; cursor: pointer;">'; //(중복 계산 방지용 변수, 문자열을 담음 (2026/5/3 19:13:10))
-
-
-        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', "' + ReferenceIdList[k3] + '")" style="color: blue; cursor: pointer;">';
-        /*
-        원래는 위와 같이 코드를 짰었는데, 이렇게 코드를 짤 경우, 예컨대 k1은 0이고 ReferenceIdList[k3] (즉 reference의 id) 은 "Freshman's Dream"이라고 했을 때 추후 HTML에는
-            <span onclick="ShowReference(0, "Freshman's Dream")" style="color: blue; cursor: pointer;">Freshman's Dream</span>
-        이런 코드가 들어가게 됨. ㅎㅎ (2026/5/3 28:40:11)
-        근데, 사실 이렇게 짜면 문제가 되는 게...
-            onclick="ShowReference(0, "Freshman's Dream")"
-        부분에서 큰따옴표가 이중으로 겹쳐 있고, 이걸 해결할 수가 없음.
-
-        · 특히 문제는,
-            onclick="ShowReference(0, \"Freshman's Dream\")"
-        와 같이 역슬래시로 escape하려고 시도해도 잘 되지 않는다는 것임. (2026/5/3 28:42:45)
-
-        · 이에 대해 ChatGPT와 Gemini에게 물어보니, 둘 다 [큰따옴표 안쪽이 JavaScript의 문법으로 해석되기 이전에, 저 전체 문자열을 HTML의 문법대로 parsing하는 과정에서 문제가 생긴다. HTML에서는 역슬래시 + 큰따옴표가 큰따옴표의 escaping으로 인식되지 않으며, 결국 저 코드는 그냥 큰따옴표가
-            "ShowReference(0, \" 및 ")"
-        처럼 묶인 상황으로 인식되어 오류를 일으킨다.]고 답변함 (2026/5/3 28:45:30)
-
-        → 해결 방안:
-
-        (1) ChatGPT와 Gemini가 공통적으로 제시한 첫 번째 해결 방법은, 안쪽의 큰따옴표를 (JavaScript식으로 역슬래시 + 큰따옴표와 같이 적어서 escape하는 게 아니라) HTML식으로 &quot;와 같이 적어서 escape하는 것임. ㅎㅎ (2026/5/3 30:24:12)
-        즉, 코드를
-            temp2 = '<span onclick="ShowReference(' + k1.toString() + ', &quot;' + ReferenceIdList[k3] + '&quot;)" style="color: blue; cursor: pointer;">';
-        와 같이 짜는 방법이 있고, 실제로 이렇게 하면 문제가 해결됨 (!) . (2026/5/3 30:24:55)
-
-        ▷ 이 코드를 좀 더 해석해 보면, 예컨대 k1은 0이고 ReferenceIdList[k3]은 "Freshman's Dream"일 때, 추후 HTML에는
-            <span onclick="ShowReference(0, &quot;Freshman's Dream&quot;)" style="color: blue; cursor: pointer;">Freshman's Dream</span>
-        이란 코드가 들어가게 됨. ㅎㅎ 그러면 이걸 HTML parser가 분석하는 과정에서 &quot;을 큰따옴표로 인식하게 되고, 텍스트를 클릭할 시에 onclick="(...)"에서 (...) 부분에 있는 JavaScript 코드인
-            ShowReference(0, &quot;Freshman's Dream&quot;)
-        에서 &quot;를 큰따옴표로 바꿔서, 실제로는
-            ShowReference(0, "Freshman's Dream")
-        이라는 JavaScript 코드를 실행하게 된다고 함..! ㅎㅎ 그래서 문제없이 잘 실행이 되는 원리라고 하네... . ㅎㅎ (2026/5/3 30:33:52) 흠.... ㅎㅎ
-
-
-        (2) Gemini가 제시한 두 번째 해결 방법은, JavaScript에 있는 문법 중 하나인 'template literal'이라는 것을 이용하는 것임. ㅎㅎ 이건 backtick (`) 을 활용해서 만들 수 있는데, 문자열과 비슷하지만 여러 줄에 걸쳐 선언할 수 있고 (이로써 엔터를 자연스럽게 입력할 수 있다는 장점이 있음!!) , 작은따옴표와 큰따옴표를 모두 내부에 별다른 escaping 없이 포함할 수 있음! (2026/5/3 30:27:15)
-        그래서, 결국 backtick (`) 은 작은따옴표와 큰따옴표 다음의, 문자열을 선언하는 세 번째 방법? ... 처럼 기능하게 되는 것 같음... . ㅎㅎ (2026/5/3 30:27:54)
-        이를 사용하면, 다행히도 escape 문제를 간신히 우회할 수 있고,
-            temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">';
-        와 같이 성공적으로 작동하는 코드를 짤 수 있음..! ㅎㅎ (2026/5/3 30:29:47) 오오..! ㅎㅎ 흠 ㅎㅎ
-
-        ▷ 이 코드도 좀 더 해석해 보면, 예컨대 k1은 0이고 ReferenceIdList[k3]은 "Freshman's Dream"일 때, 추후 HTML에는
-            <span onclick="ShowReference(0, `Freshman's Dream`)" style="color: blue; cursor: pointer;">Freshman's Dream</span>
-        이란 코드가 들어가게 됨. ㅎㅎ 그러면 텍스트를 클릭할 시에 JavaScript 코드인
-            ShowReference(0, `Freshman's Dream`)
-        이 실행되게 되고, 이건 실제로 올바른 (유효한) JavaScript 코드이며, apostrophe (작은따옴표) (') 는 backtick으로 감싼 문자열 안에 들어 있으므로 별다른 escape가 필요하지 않게 돼서 (!) 원활하게 코드가 동작하게 된다고 함..!! ㅎㅎ (2026/5/3 30:35:46)
-
-
-        (3) Gemini는 세 번째 해결 방법도 제시했는데, 그냥 텍스트 부분의 HTML 코드는
-            <span class="clickable" data-message="Freshman's Dream">Freshman's Dream</span>
-        과 같은 식으로 간단명료하게 짜고, 나중에 JavaScript 코드 내에서
-            document.querySelectorAll('.clickable').forEach(function (element) {
-                element.addEventListener('click', function () {
-                    ShowReference(0, this.dataset.message);
-                });
-            });
-        이런 식으로 각 element에 직접적으로 하나씩 (손수) event listener를 달아 주면서 클릭 시 원하는 동작을 수행하도록 만드는 방법도 알려줌... . ㅎㅎ
-        이런 식으로 할 경우, HTML 태그 안에 적혀 있는 data-(무언가) 꼴의 attribute들은 그 태그가 품고 있는 데이터로서 기능한다는 점을 활용한다는 것 같네... . ㅎㅎ (2026/5/3 30:44:16)
-        (참고: 실제론 'ShowReference(0, this.dataset.message);'에서 함수의 첫 번째 입력값 0도 텍스트에 따라서 달라지도록, (아마 data-(무언가) 꼴의 attribute들을 활용해서) 좀 더 코드를 수정해야 함... . ㅎㅎ (2026/5/3 30:45:59) 흠... ㅎㅎ)
-        (data attribute의 documentation:
-        https://developer.mozilla.org/ko/docs/Web/HTML/How_to/Use_data_attributes
-        (2026/5/3 30:46:38) 오오..! ㅎㅎ 흠 ㅎㅎ)
-        
-        (... 이 방법은 data attribute 같은 새로운 개념을 배우고 사용해 보도록 해 주며, 논리적으로도 깔끔한 좋은 코드이기는 하지만... 사실 가뜩이나 이 코드 자체도 HTML에 원래 있는 코드가 아니라 JavaScript를 이용해서 나중에 입력될 코드이니, 이 코드를 다 사용하게 되면 JavaScript 코드가 너무 읽기 힘들고 복잡해질 듯해서 이 방법을 채택하지는 않음... . ㅎㅎ
-        (1)이나 (2) 같은 방법이, 코드가 원래와 거의 비슷해서 하고자 하는 바가 명확하면서, 그렇게 길지 않아서 JavaScript의 문자열 안에 담는 것도 합리적이다..라고 생각했음... . ㅎㅎ
-        (2026/5/3 31:16:19) 오오..! ㅎㅎ 흠 ㅎㅎ)
-
-
-        ∴ 결국 나는 방법 (2)를 택해서, backtick을 사용해서 깔끔하게 코드를 짜기로 결정함... . ㅎㅎ
-        (2026/5/3 31:17:12) 오오..! ㅎㅎ 흠 ㅎㅎ
-        */
-        
-        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', &quot;' + ReferenceIdList[k3] + '&quot;)" style="color: blue; cursor: pointer;">';
-
-        //temp2 = '<span onclick="ShowReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(2026/5/3 31:18:10)
-
-        temp2 = '<span onclick="AddReference(' + k1.toString() + ', `' + ReferenceIdList[k3] + '`)" style="color: blue; cursor: pointer;">'; //(원래는 'ShowReference' 함수를 썼는데, 화면에 표시된 reference를 버튼을 눌러 삭제하는 기능을 추가하면서 'ShowReference'를 'AddReference'로 바꿈 (2026/5/4 21:18:42))
-
-
-        
-        temp1 = temp1.replace(RegexForReferenceIdList[k3], match => (temp2 + match + '</span>')); //(2026/5/3 19:14:47)
-        /*
-        나는 아까 replace 함수를
-        replace(정규 표현식, 변경 후의 문자열)
-        꼴로 쓰는 것만 (ChatGPT한테) 배웠어서, (find and) replace를 할 때, 변경 후의 문자열이 변경 전의 문자열 (특히 regular expression에 의해 감지 (detect) 된 부분) 의 영향을 받아야 할 경우엔 어떻게 해야 할지 몰랐는데...
-        한 번 더 ChatGPT에게 물어보니, replace 함수를
-        replace(정규 표현식, (정규 표현식이 detect한 문자열을 받아서 변경 후의 문자열을 내놓는 anonymous function))
-        의 꼴로 사용하는 것도 가능하다고 해서, 이걸 사용해서 문제를 해결하는 방법을 배움..!! ㅎㅎ
-        (2026/5/3 19:03:16) 오오..! ㅎㅎ 흠 ㅎㅎ
-        */
-    }
-    //(2026/5/3 19:15:15)
-
-    ProofList[k1] = temp1.split("@@"); //(2026/5/2 24:27:23) (2026/5/3 18:41:19에 수정함)
+    ProofList[k1] = WrapperList[k1].innerHTML.replace(/\[\[(.*?)\]\]/g, (match, inner) => HighlightSelectedTextForProofs(inner)).split("@@"); //(2026/5/5 25:30:55)
     /*
     innerHTML, innerText, textContent 중 innerHTML을 쓰는 게 이 상황 (직접적으로 HTML 코드에 적힌 문자열을 읽어와야 하는 상황) 에서 가장 낫다는 것을 배운 것은
     https://hianna.tistory.com/483
@@ -302,9 +248,6 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
 }
 
 //클래스가 GoToPage인 element 안에 들어 있는 수 입력란 (<input> 태그) 의 경우, <label>을 달아야 하기 때문에 어쩔 수 없이 "PageNumInput0", "PageNumInput1", "PageNumInput2", ... 꼴로 각자 개별적인 id를 부여함... . ㅎㅎ 대신 얘네는 style을 지정할 게 많이 없어서 따로 얘네들을 모은 클래스를 만들(고 CSS 파일에 그 클래스 관련 항목을 추가하)지는 않음. ㅎㅎ 그래서 이 element들의 주솟값? 은 (중복 계산 방지를 위해) 미리 (class 대신) id를 통해서 전부 추출해서 PageNumInputElementList array에 저장해 (기록해) 놓음... . ㅎㅎ (2026/5/2 27:32:48) 흠... ㅎㅎ
-
-const            RecallBoxElementList = document.getElementsByClassName(           "RecallBox");
-//이 array의 length도 NumOfProofs와 같음 (2026/5/3 16:25:04)
 
 
 
@@ -401,73 +344,125 @@ function NextPage(ProofIndex)
 
 //------------------------------------------------ (2026/5/4 20:21:42)
 //(구분선 (바로) 위쪽: 클래스가 proof인 element의 내부를 편집하는 코드,
-//구분선 아래쪽: (클래스가 proof인 element 안에 있는) 클래스가 RecallBox인 element의 내부를 편집하는 코드. ㅎㅎ (2026/5/4 20:24:37) 흠 ㅎㅎ)
+//구분선 아래쪽: (reference 안에 있거나 proof (클래스가 proof인 element) 안에 있는,) 클래스가 RecallBox인 element의 내부를 편집하는 코드 (2026/5/5 26:40:58))
 
 
 
 
-const RecallBoxContentsList = Array.from({length: NumOfProofs}, () => []); //길이가 NumOfProofs이고, 각 항목이 전부 (모두 서로 다른 오브젝트인 (모두 서로 주솟값이 다른)) empty array ('[]') 로 초기화되어 있는 array를 만드는 코드. ㅎㅎ (여기서 '() => []'는 아무것도 입력받지 않고 empty array를 출력받는 anonymous function임) (2026/5/4 20:39:48) 흠 ㅎㅎ
-//RecallBoxContentsList의 각 항목은 각 RecallBox의 내용 (contents) 을 기록하는 array에 해당함. ㅎㅎ 즉 RecallBoxContentsList는 (길이가 가변적이고 서로 다를 수 있는) array들의 array임. ㅎㅎ (2026/5/4 20:41:13) 오오..! ㅎㅎ 흠 ㅎㅎ
-//(참고: https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/from (2026/5/4 20:39:54))
-const NumOfRecallBoxContentsList = new Array(NumOfProofs).fill(0); //길이가 NumOfProofs이고, 각 항목이 전부 0으로 초기화되어 있는 array를 만드는 코드. ㅎㅎ (여기서는 각 항목이 모두 (primitive type인) 정수이므로, 굳이 모두 서로 다른 오브젝트로 만들기 위해 fill 대신 from을 쓰는 식으로 애쓸 필요가 없음) (2026/5/4 20:47:43)
-//NumOfRecallBoxContentsList[k1]은 늘 RecallBoxContentsList[k1].length와 같음. 매번 '.length'를 통해 길이 값을 읽어 오는 게 약간 비효율적이지 않을까 싶어서 그냥 다 length 값을 저장해 놓는 중복 계산 방지용 변수를 만들어 본 것임... . ㅎㅎ (... 굳이 그럴 필요는 없으려나...? ㅋㅋㅋㅋ...) (2026/5/4 20:49:31) 흠... ㅎㅎ
-
-
-
-function AddReference(ProofIndex, ReferenceId) //(2026/5/4)
+function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (definition, theorem, ...) 상자 안에서 다시 reference 추가하기 (2026/5/5 23:52:22))
+//ClickedText는 클릭된 그 텍스트가 담긴 <span> 태그의 element를 의미하고, ReferenceIndex는 ReferenceElementList (혹은 ReferenceIdLowerCaseList) 기준으로 몇 번째 reference를 추가할 것인지를 의미함... . ㅎㅎ (2026/5/5 24:03:46) 흠 ㅎㅎ
 {
-    const reference = document.getElementById(ReferenceId); //(2026/5/3 16:21:08)
-
-    const ReferenceContent = '<div class="' + reference.className + '">'
-            + reference.innerHTML
-        + '</div> '; //(2026/5/3 16:31:28)
+    const box = ClickedText.parentElement.querySelector(".RecallBox"); /*클릭된 텍스트 (ClickedText라는 element) 가 들어 있는 reference 안에 들어 있는 클래스가 RecallBox인 (유일한) element를 찾아내는 코드. ㅎㅎ
+    (ChatGPT에게 물어보니, (여러 개의 element에서 ID를 동일하게 "RecallBox"로 주는 건 안 되고, 여러 개의 element들에서 클래스를 모두 "RecallBox"로 준 후) 이렇게 하거나 아니면 그냥
+    const box = ClickedText.parentElement.getElementsByClassName("RecallBox")[0];
+    과 같이 짜는 게 가장 좋고 common하다고 해서 그렇게 짬... . ㅎㅎ)
+    (2026/5/5 25:54:38) 오... ㅎㅎ 흠... ㅎㅎ
+    */
     
-    RecallBoxContentsList[ProofIndex].push(ReferenceContent); //(2026/5/4 20:55:17)
-    //(화면에 보이는 순서가 아래에서 위로든 위에서 아래로든 상관없이, RecallBoxContentsList에 reference들을 담을 때는 계속 오른쪽 (array의 index가 늘어나는 방향) 에 새 항목을 추가함에 주의 (2026/5/4 20:56:06))
-    NumOfRecallBoxContentsList[ProofIndex]++; //(2026/5/4 20:59:02)
+    const temp = `<div>
+            <div class="${ReferenceElementList[ReferenceIndex].className}">
+                ${ReferenceContentList[ReferenceIndex]}
+            </div>
+            <div style="text-align: right;">
+                <button onclick="DeleteReference(this)" style="cursor: pointer; margin: 5px;">Delete ↑</button>
+            </div>
+        </div> `; //(2026/5/5 26:04:22)
+    
+    /*
+    const temp = `<div class="${ReferenceElementList[ReferenceIndex].className}">
+            ${ReferenceContentList[ReferenceIndex]}
+            <div style="text-align: right;">
+                <button onclick="DeleteReference(this)" style="cursor: pointer; margin: 5px;">Delete</button>
+            </div>
+        </div> `; //(2026/5/5 26:06:23)
+    //이렇게 'Delete' 버튼을 definition, theorem, ... 상자 (직사각형) 안에 배치하도록 짤 수도 있을 듯..? ... ㅎㅎ (2026/5/5 26:07:16) 흠... ㅎㅎ
+    */
 
-    ShowReference(ProofIndex); //화면을 업데이트하는 코드 (2026/5/4 21:15:44)
+
+
+    box.innerHTML = temp + box.innerHTML; //(2026/5/5 26:08:57)
+    
+    MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
+    · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
+    · box.firstElementChild.firstElementChild는 temp에 적혀 있는 element의 첫 번째 child element인, 클래스가 def 혹은 thm 혹은 ... 인 element, 즉 reference 자체를 의미한다.)
+    (2026/5/5 26:53:20) 오오..! ㅎㅎ 흠 ㅎㅎ)*/
+
+    /*
+    참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
+        box.innerHTML = box.innerHTML + temp;
+        MathJax.typesetPromise([box.lastElementChild.firstElementChild]);
+    혹은
+        box.innerHTML += temp;
+        MathJax.typesetPromise([box.lastElementChild.firstElementChild]);
+    라는 코드를 사용하면 된다. ㅎㅎ
+    (원래는 2026/5/4 21:14:00에 썼던 주석을, 2026/5/5 26:09:48에 수정해서 재사용함)
+    (2번의 'MathJax.typesetPromise([box.lastElementChild.firstElementChild]);'는 2026/5/5 26:57:31에 추가함)
+    오오..! ㅎㅎ 흠 ㅎㅎ
+    */
 }
-//(2026/5/4 21:15:50)
+//(... 중복 계산 방지를 위해 ReferenceElementList[k3].className, ... 도 모두 미리 계산해서 array에 저장해 놓고, ... 할 필요는 없겠..지..? ... ㅋㅋㅋㅋ (2026/5/5 26:02:02) 흠... ㅎㅎ)
+//(2026/5/5 26:57:39)
 
 
 
-function DeleteReference(ProofIndex, ReferenceIndex) //ReferenceIndex는, 한 RecallBox 안에서 특정한 reference (definition / theorem / ... (의 직사각형 상자)) 가 (아래에서부터) 몇 번째인지를 세는 index로, 0부터 시작함 (2026/5/4 20:44:41)
+function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍스트를 눌렀을 때 reference 추가하기 (2026/5/5 23:57:38))
+//ClickedText는 클릭된 그 텍스트가 담긴 <span> 태그의 element를 의미하고, ReferenceIndex는 ReferenceElementList (혹은 ReferenceIdLowerCaseList) 기준으로 몇 번째 reference를 추가할 것인지를 의미함... . ㅎㅎ (2026/5/5 24:03:46) 흠 ㅎㅎ
 {
-    RecallBoxContentsList[ProofIndex].splice(ReferenceIndex, 1); //(2026/5/4 20:58:32)
-    NumOfRecallBoxContentsList[ProofIndex]--; //(2026/5/4 20:59:12)
+    const box = ClickedText.parentElement.parentElement.parentElement.querySelector(".RecallBox"); /*
+    · 클릭된 텍스트 (ClickedText라는 element)
+    · 가 들어 있는 ArgumentBox (이때 '.parentElement'가 2번 필요함)
+    · 가 들어 있는, 클래스가 proof인 element (이때 '.parentElement'가 1번 필요함)
+    · 의 안에 들어 있는, 클래스가 RecallBox인 (유일한) element
+    를 찾아내는 코드 (2026/5/5 26:15:32)*/
 
-    ShowReference(ProofIndex); //화면을 업데이트하는 코드 (2026/5/4 21:15:55)
+    const temp = `<div>
+            <div class="${ReferenceElementList[ReferenceIndex].className}">
+                ${ReferenceContentList[ReferenceIndex]}
+            </div>
+            <div style="text-align: right;">
+                <button onclick="DeleteReference(this)" style="cursor: pointer; margin: 5px;">Delete ↑</button>
+            </div>
+        </div> `; //(2026/5/5 26:04:22)
+    
+    /*
+    const temp = `<div class="${ReferenceElementList[ReferenceIndex].className}">
+            ${ReferenceContentList[ReferenceIndex]}
+            <div style="text-align: right;">
+                <button onclick="DeleteReference(this)" style="cursor: pointer; margin: 5px;">Delete</button>
+            </div>
+        </div> `; //(2026/5/5 26:06:23)
+    //이렇게 'Delete' 버튼을 definition, theorem, ... 상자 (직사각형) 안에 배치하도록 짤 수도 있을 듯..? ... ㅎㅎ (2026/5/5 26:07:16) 흠... ㅎㅎ
+    */
+
+
+
+    box.innerHTML = temp + box.innerHTML; //(2026/5/5 26:08:57)
+    
+    MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
+    · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
+    · box.firstElementChild.firstElementChild는 temp에 적혀 있는 element의 첫 번째 child element인, 클래스가 def 혹은 thm 혹은 ... 인 element, 즉 reference 자체를 의미한다.)
+    (2026/5/5 26:53:20) 오오..! ㅎㅎ 흠 ㅎㅎ)*/
+
+    /*
+    참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
+        box.innerHTML = box.innerHTML + temp;
+        MathJax.typesetPromise([box.lastElementChild.firstElementChild]);
+    혹은
+        box.innerHTML += temp;
+        MathJax.typesetPromise([box.lastElementChild.firstElementChild]);
+    라는 코드를 사용하면 된다. ㅎㅎ
+    (원래는 2026/5/4 21:14:00에 썼던 주석을, 2026/5/5 26:09:48에 수정해서 재사용함)
+    (2번의 'MathJax.typesetPromise([box.lastElementChild.firstElementChild]);'는 2026/5/5 26:57:31에 추가함)
+    오오..! ㅎㅎ 흠 ㅎㅎ
+    */
 }
-//(2026/5/4 21:15:57)
+//(코드가 box를 계산하는 코드 이외엔 정확히 똑같지만, 추후에 definition, theorem, ... 안에서 reference를 띄울 때와 proof 안에서 reference를 띄울 때의 behavior를 다르게 만들고, ... 할 수도 있으니 (?) 일단은 AddReferenceForReferences 함수와 AddReferenceForProofs 함수를 (두 개의 함수로) 완전히 분리해 놓음... . ㅎㅎ (2026/5/5 26:19:31) 흠... ㅎㅎ)
+//(2026/5/5 26:59:05)
 
 
 
-function ShowReference(ProofIndex)
-//(함수명을 UpdateReference, ... 같은 이름으로 바꿀까 생각도 해 봤지만, 이 함수는 reference들의 목록을 (단순히 내부적으로 업데이트만 하는 게 아니라) 실제로 화면에 띄우는 기능을 가지고 있으므로, 역시 ShowReference라는 이름이 더 적합한 것 같다고 판단함... . ㅎㅎ (2026/5/4 21:00:45) 흠... ㅎㅎ)
+function DeleteReference(ClickedButton) //ClickedButton은 클릭된 그 'Delete ↑' 버튼 (element) 자체를 의미함 (2026/5/5 26:21:30)
 {
-    let TempForRecallBox = ""; //RecallBoxElementList[ProofIndex].innerHTML에 넣을 내용 (문자열) 을 임시로 저장해 두는 변수 (2026/5/4 21:06:10) (2026/5/4 21:20:00에 ' = ""'을 추가함)
-    let temp; //이 함수 바깥에서 정의된 temp1, temp2와 겹치지 않으려고 이름을 temp라고 지음 (2026/5/4 21:06:39)
-    let k4; //마찬가지로 이 함수 바깥에서 정의된 k1, k2, k3와 겹치지 않으려고 이름을 k4라고 지음 (+ k1, k2, k3는 각각 어떤 범위에서 도는 dummy variable인지가 역할이 명확히 나뉘어 있기 때문에, 여기서 사용되는 완전히 새로운 의미의 새 dummy variable에는 새 이름을 부여하는 게 맞다고 생각했음) (2026/5/4 21:07:33)
-
-    for(k4 = 0; k4 < NumOfRecallBoxContentsList[ProofIndex]; k4++)
-    {
-        temp = RecallBoxContentsList[ProofIndex][k4]
-            + `<div style="text-align: right;">
-                <button onclick="DeleteReference(${ProofIndex.toString()}, ${k4.toString()})" style="cursor: pointer; margin: 5px;">Delete ↑</button>
-            </div>`; //(2026/5/4 21:11:36) ('margin: 5px;'은 2026/5/4 21:22:55에 추가함) ('<div style="text-align: right;">'와 '</div>'는 2026/5/4 29:44:37에 추가함)
-        
-        TempForRecallBox = temp + TempForRecallBox; //(2026/5/4 21:11:58)
-        /*
-        참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
-            TempForRecallBox = TempForRecallBox + temp;
-        혹은
-            TempForRecallBox += temp;
-        라는 코드를 사용하면 된다. ㅎㅎ
-        (2026/5/4 21:14:00) 오오..! ㅎㅎ 흠 ㅎㅎ
-        */
-    }
-
-    RecallBoxElementList[ProofIndex].innerHTML = TempForRecallBox; //(2026/5/4 21:12:04)
+    ClickedButton.parentElement.parentElement.remove(); //(2026/5/5 26:22:30)
 }
-//(2026/5/4 21:23:04)
+//(2026/5/5 26:22:38)
