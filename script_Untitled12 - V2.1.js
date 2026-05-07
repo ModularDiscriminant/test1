@@ -388,10 +388,11 @@ function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (de
 
     box.innerHTML = "<br>" + temp + box.innerHTML.slice(4); //(2026/5/5 26:08:57) (2026/5/7 15:37:43에 수정함 (코드가 살짝 복잡해 보이기도 하지만, 이렇게 하는 것보다 더 좋은 방법은 떠올리지 못했음... (2026/5/7 17:32:26)))
     
-    MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
+    MathJax.typesetPromise([box.children[1].firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
     · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
     · box.firstElementChild.firstElementChild는 temp에 적혀 있는 element의 첫 번째 child element인, 클래스가 def 혹은 thm 혹은 ... 인 element, 즉 reference 자체를 의미한다.)
     (2026/5/5 26:53:20) 오오..! ㅎㅎ 흠 ㅎㅎ)*/
+    //RecallBox에 reference가 하나라도 들어 있을 경우, 맨 앞에 '<br>' (개행) 을 붙이기 때문에, box.firstElementChild는 (맨 위에 적힌 reference가 아니라) 이 '<br>' element를 의미하게 됨... . (...) 그래서 맨 위에 적힌 reference를 참조하려면, 이제는 box.children[1]을 사용해야 함... . ㅎㅎ (2026/5/7 17:53:41) 흠... ㅎㅎ
 
     /*
     참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
@@ -412,7 +413,7 @@ function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (de
     */
 }
 //(... 중복 계산 방지를 위해 ReferenceElementList[k3].className, ... 도 모두 미리 계산해서 array에 저장해 놓고, ... 할 필요는 없겠..지..? ... ㅋㅋㅋㅋ (2026/5/5 26:02:02) 흠... ㅎㅎ)
-//(2026/5/7 15:39:04)
+//(2026/5/7 17:54:14)
 
 
 
@@ -456,10 +457,11 @@ function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍�
 
     box.innerHTML = "<br>" + temp + box.innerHTML.slice(4); //(2026/5/5 26:08:57) (2026/5/7 15:37:43에 수정함 (코드가 살짝 복잡해 보이기도 하지만, 이렇게 하는 것보다 더 좋은 방법은 떠올리지 못했음... (2026/5/7 17:32:26)))
     
-    MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
+    MathJax.typesetPromise([box.children[1].firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
     · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
     · box.firstElementChild.firstElementChild는 temp에 적혀 있는 element의 첫 번째 child element인, 클래스가 def 혹은 thm 혹은 ... 인 element, 즉 reference 자체를 의미한다.)
     (2026/5/5 26:53:20) 오오..! ㅎㅎ 흠 ㅎㅎ)*/
+    //RecallBox에 reference가 하나라도 들어 있을 경우, 맨 앞에 '<br>' (개행) 을 붙이기 때문에, box.firstElementChild는 (맨 위에 적힌 reference가 아니라) 이 '<br>' element를 의미하게 됨... . (...) 그래서 맨 위에 적힌 reference를 참조하려면, 이제는 box.children[1]을 사용해야 함... . ㅎㅎ (2026/5/7 17:53:41) 흠... ㅎㅎ
 
     /*
     참고: 위 코드는 reference들을 (추가한 순서에 따라) 아래에서 위로 출력하는 코드이다. 만약 reference를 (추가한 순서에 따라) 위에서 아래로 출력하고 싶다면,
@@ -480,7 +482,7 @@ function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍�
     */
 }
 //(코드가 box를 계산하는 코드 이외엔 정확히 똑같지만, 추후에 definition, theorem, ... 안에서 reference를 띄울 때와 proof 안에서 reference를 띄울 때의 behavior를 다르게 만들고, ... 할 수도 있으니 (?) 일단은 AddReferenceForReferences 함수와 AddReferenceForProofs 함수를 (두 개의 함수로) 완전히 분리해 놓음... . ㅎㅎ (2026/5/5 26:19:31) 흠... ㅎㅎ)
-//(2026/5/7 15:39:19)
+//(2026/5/7 17:54:22)
 
 
 
