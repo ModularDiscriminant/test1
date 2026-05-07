@@ -1,4 +1,4 @@
-//2026/5/5
+//2026/5/5, 2026/5/7
 
 
 
@@ -209,8 +209,7 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
             </div>
         </div>
 
-        <br>
-        <div class="RecallBox"></div>`; //(2026/5/4 19:48:56)
+        <div class="RecallBox"></div>`; //(2026/5/4 19:48:56) (원래 이 RecallBox 직전에 '<br>' (개행) 이 하나 있었는데, 이제부터는 RecallBox 안에 reference가 하나라도 있으면 자동으로 맨 위에 '<br>' (개행) 을 삽입하게 되면서 이를 제거함 (2026/5/7 17:29:51))
     /*
     (backtick으로 감싼 template literal을 사용하면, 기존처럼 HTML 코드의 모든 행을 따로따로 문자열로 만들고 전부 '+'로 잇는 수고를 하지 않아도 되며, 더하여 문자열 안에 들어 있어야 하는 변수들도 ('${...}'를 사용해서) 전부 간단히 문자열 안에 삽입할 수 있다는 것을 알게 돼서, 기존보다 코드가 더욱 보기 편하고 깔끔해질 것 같아서 이 장문의 문자열 부분만 template literal을 사용해서 다시 코딩해 봄... . ㅎㅎ (기능에는 전혀 차이가 없음!) (2026/5/4 19:52:47)
     코드에서 문자열을 사용하는 나머지 부분들은 (사실 길이가 그렇게 길지 않아서) 죄다 backtick을 사용하는 template literal로 고쳐 놓지는 않겠지만, 아마도 추후에는 코딩할 때 이렇게 backtick과 '${...}'를 사용해서 innerHTML에 넣을 문자열을 편집하는 방식을 많이 사용할 듯..?? ... ㅎㅎ (2026/5/4 19:55:11) 오오..!! ㅎㅎ 흠 ㅎㅎ
@@ -359,6 +358,13 @@ function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (de
     (2026/5/5 25:54:38) 오... ㅎㅎ 흠... ㅎㅎ
     */
     
+    if(box.childElementCount === 0)
+    {
+        box.innerHTML = "<br>";
+    }
+    //(2026/5/7 15:34:18)
+    //RecallBox 안에 reference가 하나도 없으면 (그리고 '<br>' (개행) 도 하나도 없으면) (이를 'box.childElementCount === 0'으로 판정함) , 아래 코드를 실행하기 전에 우선 '<br>' (개행) 을 하나 붙여 주는 코드. ㅎㅎ (2026/5/7 17:31:46) 흠 ㅎㅎ
+    
     const temp = `<div>
             <div class="${ReferenceElementList[ReferenceIndex].className}">
                 ${ReferenceContentList[ReferenceIndex]}
@@ -380,7 +386,7 @@ function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (de
 
 
 
-    box.innerHTML = temp + box.innerHTML; //(2026/5/5 26:08:57)
+    box.innerHTML = "<br>" + temp + box.innerHTML.slice(4); //(2026/5/5 26:08:57) (2026/5/7 15:37:43에 수정함 (코드가 살짝 복잡해 보이기도 하지만, 이렇게 하는 것보다 더 좋은 방법은 떠올리지 못했음... (2026/5/7 17:32:26)))
     
     MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
     · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
@@ -398,10 +404,15 @@ function AddReferenceForReferences(ClickedText, ReferenceIndex) //(reference (de
     (원래는 2026/5/4 21:14:00에 썼던 주석을, 2026/5/5 26:09:48에 수정해서 재사용함)
     (2번의 'MathJax.typesetPromise([box.lastElementChild.firstElementChild]);'는 2026/5/5 26:57:31에 추가함)
     오오..! ㅎㅎ 흠 ㅎㅎ
+
+    (참고 (2026/5/7 17:33:30) : 아래에서 위로 출력할 시의 코드가 'box.innerHTML = "<br>" + temp + box.innerHTML.slice(4);'로 변경되었지만,
+    (RecallBox가 reference를 하나라도 갖고 있을 경우 RecallBox 안 (innerHTML) 의 맨 위 (혹은 맨 앞, 혹은 문자열상 맨 왼쪽) 에 '<br>' (개행) 을 덧붙여 놓기 때문에,)
+    위에서 아래로 출력할 시의 코드는 그대로 'box.innerHTML += temp;'임... . ㅎㅎ
+    (2026/5/7 17:36:45) 오... ㅎㅎ 흠... ㅎㅎ)
     */
 }
 //(... 중복 계산 방지를 위해 ReferenceElementList[k3].className, ... 도 모두 미리 계산해서 array에 저장해 놓고, ... 할 필요는 없겠..지..? ... ㅋㅋㅋㅋ (2026/5/5 26:02:02) 흠... ㅎㅎ)
-//(2026/5/5 26:57:39)
+//(2026/5/7 15:39:04)
 
 
 
@@ -415,6 +426,13 @@ function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍�
     · 의 안에 들어 있는, 클래스가 RecallBox인 (유일한) element
     를 찾아내는 코드 (2026/5/5 26:15:32)*/
 
+    if(box.childElementCount === 0)
+    {
+        box.innerHTML = "<br>";
+    }
+    //(2026/5/7 15:34:18)
+    //RecallBox 안에 reference가 하나도 없으면 (그리고 '<br>' (개행) 도 하나도 없으면) (이를 'box.childElementCount === 0'으로 판정함) , 아래 코드를 실행하기 전에 우선 '<br>' (개행) 을 하나 붙여 주는 코드. ㅎㅎ (2026/5/7 17:31:46) 흠 ㅎㅎ
+
     const temp = `<div>
             <div class="${ReferenceElementList[ReferenceIndex].className}">
                 ${ReferenceContentList[ReferenceIndex]}
@@ -436,7 +454,7 @@ function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍�
 
 
 
-    box.innerHTML = temp + box.innerHTML; //(2026/5/5 26:08:57)
+    box.innerHTML = "<br>" + temp + box.innerHTML.slice(4); //(2026/5/5 26:08:57) (2026/5/7 15:37:43에 수정함 (코드가 살짝 복잡해 보이기도 하지만, 이렇게 하는 것보다 더 좋은 방법은 떠올리지 못했음... (2026/5/7 17:32:26)))
     
     MathJax.typesetPromise([box.firstElementChild.firstElementChild]); /*(box라는 element 안에서, 방금 추가한 reference 안쪽만 수식을 재렌더링하는 코드. ㅎㅎ (
     · box.firstElementChild는 temp에 적혀 있는 내용과 같은, 실제 reference 내용과 'Delete ↑' 버튼을 모두 포함하는 element를 의미하고,
@@ -454,15 +472,32 @@ function AddReferenceForProofs(ClickedText, ReferenceIndex) //(proof 안의 텍�
     (원래는 2026/5/4 21:14:00에 썼던 주석을, 2026/5/5 26:09:48에 수정해서 재사용함)
     (2번의 'MathJax.typesetPromise([box.lastElementChild.firstElementChild]);'는 2026/5/5 26:57:31에 추가함)
     오오..! ㅎㅎ 흠 ㅎㅎ
+
+    (참고 (2026/5/7 17:33:30) : 아래에서 위로 출력할 시의 코드가 'box.innerHTML = "<br>" + temp + box.innerHTML.slice(4);'로 변경되었지만,
+    (RecallBox가 reference를 하나라도 갖고 있을 경우 RecallBox 안 (innerHTML) 의 맨 위 (혹은 맨 앞, 혹은 문자열상 맨 왼쪽) 에 '<br>' (개행) 을 덧붙여 놓기 때문에,)
+    위에서 아래로 출력할 시의 코드는 그대로 'box.innerHTML += temp;'임... . ㅎㅎ
+    (2026/5/7 17:36:45) 오... ㅎㅎ 흠... ㅎㅎ)
     */
 }
 //(코드가 box를 계산하는 코드 이외엔 정확히 똑같지만, 추후에 definition, theorem, ... 안에서 reference를 띄울 때와 proof 안에서 reference를 띄울 때의 behavior를 다르게 만들고, ... 할 수도 있으니 (?) 일단은 AddReferenceForReferences 함수와 AddReferenceForProofs 함수를 (두 개의 함수로) 완전히 분리해 놓음... . ㅎㅎ (2026/5/5 26:19:31) 흠... ㅎㅎ)
-//(2026/5/5 26:59:05)
+//(2026/5/7 15:39:19)
 
 
 
 function DeleteReference(ClickedButton) //ClickedButton은 클릭된 그 'Delete ↑' 버튼 (element) 자체를 의미함 (2026/5/5 26:21:30)
 {
-    ClickedButton.parentElement.parentElement.remove(); //(2026/5/5 26:22:30)
+    const reference = ClickedButton.parentElement.parentElement; //(중복 계산 방지용 변수 (2026/5/7 13:25:42))
+    const box = reference.parentElement; //(그 reference가 담긴 RecallBox를 의미함, 중복 계산 방지용 변수 (2026/5/7 13:27:21))
+
+    if(box.childElementCount === 2) //(2026/5/7 17:24:26)
+    //(box를 정의하지 않았을 경우) 이게 반드시 'reference.remove();'보다 먼저 실행되어야 하므로, 그냥 'reference.remove();'를 실행하기 이전에 'remove 후에는 reference가 하나도 안 남을 것인가'를 판정해서 동작하도록 함. ㅎㅎ (2026/5/7 17:26:22)
+    //(참고로, '남은 reference 개수가 1개인가'는 ('box.childElementCount === 1'이 아니라) 'box.childElementCount === 2'와 동치임. 이는 (reference가 하나라도 적혀 있을 경우 맨 앞에 붙이는) '<br>' (개행) 도 하나의 child element로 간주되기 때문임... . (...) (2026/5/7 17:27:56) 흠.... ㅎㅎ (더 좋은 방법은 딱히 떠오르지 않았음... ㅋㅋㅋㅋ (2026/5/7 17:44:17) 흠... ㅎㅎ))
+    {
+        box.innerHTML = ""; //(2026/5/7 13:27:41) (이때 '<br>' (개행) 이 사라지면서, 남아 있던 한 빈 줄이 사라져서 definition / theorem / ... 이 적힌 상자 (직사각형) 나 proof가 불필요한 공백이 없는 깔끔한 모습이 됨 (2026/5/7 17:42:07))
+    }
+    else
+    {
+        reference.remove(); //(2026/5/7 13:27:55)
+    }
 }
-//(2026/5/5 26:22:38)
+//(2026/5/7 17:28:02)
