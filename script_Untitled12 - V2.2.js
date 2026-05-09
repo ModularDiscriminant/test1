@@ -2,6 +2,41 @@
 
 
 
+function HideOrShow(ClickedButton, label) //'ClickedButton'은 클릭된 그 버튼 (element) 자체를 의미하고, 'label'은 버튼에 적을 글귀, 즉 Hide 혹은 Show 뒤에 (공백 한 칸을 두고) 붙일 문자열을 의미함 (2026/5/9 19:14:03)
+{
+    const element = ClickedButton.parentElement.lastElementChild; //(내용을 숨기거나 보일 element. 편의상, 가독성을 위해, ... 정의함 (2026/5/9 19:27:25))
+    //(참고: 이 element의 style에 display property가 뭔가 특정한 값으로 주어져 있었으면 안 됨. 그랬다간 버튼을 누르는 과정에서 그 property가 사라질 것이기 때문... . ㅎㅎ (... 아니면 그냥 HTML의 'hidden' property를 쓸 걸 그랬ㄴ..? ...) (2026/5/9 19:28:54) 흠... ㅎㅎ)
+
+    if(ClickedButton.dataset.shown === "true")
+    {
+        element.style.display = "none";
+        //element.setAttribute("hidden", ""); //HTML의 'hidden' property를 사용해서, 이렇게 짜도 됨 (2026/5/9 19:32:34)
+
+        ClickedButton.dataset.shown = "false";
+        ClickedButton.innerHTML = "Show " + label; //(2026/5/9 19:33:35)
+    }
+    else //'ClickedButton.dataset.shown'이 "true"만 아니었다면 항상 'element'의 내용을 보이게 만드므로 (혹은 'element'의 style의 'display' property를 삭제해 버리므로) , 'ClickedButton.dataset.shown'이 "true"나 "false"가 아닌 값이더라도 나쁘지 않게 동작함... . ㅎㅎ (2026/5/9 19:38:21) 흠 ㅎㅎ
+    {
+        element.style.removeProperty("display"); //'display' property에 원래 (default로) 무슨 값이 들어 있었는지는 태그별로 다를 수 있다고 하길래, 그냥 이 property를 지워 버리는 게 가장 편할 것 같아서 removeProperty를 씀... . ㅎㅎ (2026/5/9 19:31:59) 흠... ㅎㅎ
+        //element.removeAttribute("hidden"); //HTML의 'hidden' property를 사용해서, 이렇게 짜도 됨 (2026/5/9 19:32:34)
+
+        ClickedButton.dataset.shown = "true";
+        ClickedButton.innerHTML = "Hide " + label; //(2026/5/9 19:33:53)
+    }
+}
+//(2026/5/9 19:34:08)
+//(이 'HideOrShow' 함수는, 아주 일반적으로, 여러 곳에 적용할 수 있는 함수임. ㅎㅎ 다양한 장소들에 적극적으로 활용해 보기..! ㅎㅎ (2026/5/9 19:39:16) 오오..! ㅎㅎ 흠 ㅎㅎ)
+
+
+
+
+//------------------------------------------------ (2026/5/9 19:11:26)
+//(구분선 위쪽: 딱히 미리 계산된 데이터를 필요로 하지 않는, 일반적으로 사용될 수 있는 (다른 파일로 분리될 수도 있는) 함수들을 선언하는 코드,
+//구분선 아래쪽: 각 definition, theorem, ... 등 reference로 사용되는 것들의 innerHTML을 좀 편집하는 코드. (2026/5/9 19:12:09) 흠 ㅎㅎ)
+
+
+
+
 //const ReferenceElementList = document.getElementsByClassName("def thm lem cor prp"); //(각각 definition, theorem, lemma, corollary, proposition을 의미함 (2026/5/3 16:36:20))
 //정의, 정리, figure (?) , ... 등 추후 참조할 만한 것들은 모두 'reference'라는 이름으로 묶어서 부른다. ㅎㅎ (2026/5/3 16:38:26) 흠 ㅎㅎ
 
@@ -172,44 +207,48 @@ for(k1 = 0; k1 < NumOfProofs; k1++)
 //<div class="proof">(...)</div> 안에 ArgumentBox를 비롯한 구조들을 전부 집어넣기 (2026/5/2 25:45:42)
 for(k1 = 0; k1 < NumOfProofs; k1++)
 {
-    WrapperList[k1].innerHTML = `<h2>Proof.</h2>
-        <div class="ArgumentBox">
-            <div class="CurrentPage">
-                Current Page: 1/${ProofLenList[k1].toString()}
+    WrapperList[k1].innerHTML = `<button onclick="HideOrShow(this, 'Proof')" data-shown="true" style="cursor: pointer; margin: 5px;">Hide Proof</button>
+        <div>
+            <h2>Proof.</h2>
+            
+            <div class="ArgumentBox">
+                <div class="CurrentPage">
+                    Current Page: 1/${ProofLenList[k1].toString()}
+                </div>
+
+                <div class="GoToPage">
+                    <label for="PageNumInput${k1.toString()}">Go to Page</label> &nbsp;&nbsp;
+                    <input type="number" id="PageNumInput${k1.toString()}" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button onclick="ChangePage(${k1.toString()})" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
+                </div>
+
+                <button class="PrevButton" onclick="PrevPage(${k1.toString()})">
+                    ← Previous
+                </button>
+
+                <button class="NextButton" onclick="NextPage(${k1.toString()})">
+                    Next →
+                </button>
+
+                <div class="StatusAndGoal">
+                    ${ProofList[k1][0][0]}
+                </div>
+
+                <div class="ExampleStatusAndGoal">
+                    ${ProofList[k1][0][2]}
+                </div>
+
+                <div class="Argument">
+                    ${ProofList[k1][0][1]}
+                </div>
+
+                <div class="ExampleArgument">
+                    ${ProofList[k1][0][3]}
+                </div>
             </div>
 
-            <div class="GoToPage">
-                <label for="PageNumInput${k1.toString()}">Go to Page</label> &nbsp;&nbsp;
-                <input type="number" id="PageNumInput${k1.toString()}" style="width: 50px"></input> &nbsp;&nbsp;&nbsp;&nbsp;
-                <button onclick="ChangePage(${k1.toString()})" style="cursor: pointer">&nbsp;&nbsp;Go&nbsp;&nbsp;</button>
-            </div>
-
-            <button class="PrevButton" onclick="PrevPage(${k1.toString()})">
-                ← Previous
-            </button>
-
-            <button class="NextButton" onclick="NextPage(${k1.toString()})">
-                Next →
-            </button>
-
-            <div class="StatusAndGoal">
-                ${ProofList[k1][0][0]}
-            </div>
-
-            <div class="ExampleStatusAndGoal">
-                ${ProofList[k1][0][2]}
-            </div>
-
-            <div class="Argument">
-                ${ProofList[k1][0][1]}
-            </div>
-
-            <div class="ExampleArgument">
-                ${ProofList[k1][0][3]}
-            </div>
-        </div>
-
-        <div class="RecallBox"></div>`; //(2026/5/4 19:48:56) (원래 이 RecallBox 직전에 '<br>' (개행) 이 하나 있었는데, 이제부터는 RecallBox 안에 reference가 하나라도 있으면 자동으로 맨 위에 '<br>' (개행) 을 삽입하게 되면서 이를 제거함 (2026/5/7 17:29:51))
+            <div class="RecallBox"></div>
+        </div>`; //(2026/5/4 19:48:56) (원래 이 RecallBox 직전에 '<br>' (개행) 이 하나 있었는데, 이제부터는 RecallBox 안에 reference가 하나라도 있으면 자동으로 맨 위에 '<br>' (개행) 을 삽입하게 되면서 이를 제거함 (2026/5/7 17:29:51)) (2026/5/9 19:05:20에, 전체를 <div> 태그로 감싸고 맨 위에 이를 숨길지 보일지를 결정하는 버튼을 추가함)
     /*
     (backtick으로 감싼 template literal을 사용하면, 기존처럼 HTML 코드의 모든 행을 따로따로 문자열로 만들고 전부 '+'로 잇는 수고를 하지 않아도 되며, 더하여 문자열 안에 들어 있어야 하는 변수들도 ('${...}'를 사용해서) 전부 간단히 문자열 안에 삽입할 수 있다는 것을 알게 돼서, 기존보다 코드가 더욱 보기 편하고 깔끔해질 것 같아서 이 장문의 문자열 부분만 template literal을 사용해서 다시 코딩해 봄... . ㅎㅎ (기능에는 전혀 차이가 없음!) (2026/5/4 19:52:47)
     코드에서 문자열을 사용하는 나머지 부분들은 (사실 길이가 그렇게 길지 않아서) 죄다 backtick을 사용하는 template literal로 고쳐 놓지는 않겠지만, 아마도 추후에는 코딩할 때 이렇게 backtick과 '${...}'를 사용해서 innerHTML에 넣을 문자열을 편집하는 방식을 많이 사용할 듯..?? ... ㅎㅎ (2026/5/4 19:55:11) 오오..!! ㅎㅎ 흠 ㅎㅎ
